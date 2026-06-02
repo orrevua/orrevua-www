@@ -14,10 +14,10 @@ export function Hero() {
 
   return (
     <>
-    <section className="mx-auto flex max-h-[80vh] max-w-5xl items-center gap-12 px-6 pt-32 pb-20">
-      <div className="flex-[3]">
+    <section className="mx-auto flex max-w-5xl flex-col-reverse items-center gap-10 px-6 pt-32 pb-20 lg:flex-row lg:gap-12">
+      <div className="flex-[3] text-center lg:text-left">
         <motion.h1
-          className="text-5xl font-bold text-text-primary lg:text-6xl"
+          className="text-4xl font-bold text-text-primary sm:text-5xl lg:text-6xl"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
@@ -36,7 +36,7 @@ export function Hero() {
         </motion.p>
 
         <motion.p
-          className="mt-6 max-w-lg text-lg text-text-secondary"
+          className="mx-auto mt-6 max-w-lg text-lg text-text-secondary lg:mx-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -45,7 +45,7 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="mt-8 flex items-center gap-4"
+          className="mt-8 flex items-center justify-center gap-4 lg:justify-start"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.6 }}
@@ -67,9 +67,9 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <div className="hidden flex-2 justify-end lg:flex">
+      <div className="flex flex-2 justify-center lg:justify-end">
         {imageError ? (
-          <div className="flex h-96 w-80 items-center justify-center rounded-2xl border border-border bg-bg-secondary">
+          <div className="flex h-52 w-44 items-center justify-center rounded-2xl border border-border bg-bg-secondary sm:h-72 sm:w-60 lg:h-96 lg:w-80">
             <span className="font-mono text-4xl text-text-tertiary">FF</span>
           </div>
         ) : (
@@ -78,7 +78,7 @@ export function Hero() {
             alt={personalInfo.name}
             width={400}
             height={500}
-            className="max-h-96 rounded-2xl border border-border object-cover"
+            className="max-h-52 rounded-2xl border border-border object-cover sm:max-h-72 lg:max-h-96"
             priority
             onError={() => setImageError(true)}
           />
