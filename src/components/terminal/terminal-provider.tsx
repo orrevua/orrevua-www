@@ -59,7 +59,7 @@ function reducer(state: TerminalState, action: Action): TerminalState {
       return {
         ...state,
         history: [...state.history, action.entry],
-        commandHistory: [...state.commandHistory, action.raw],
+        commandHistory: [...state.commandHistory, action.raw].slice(-100),
         commandHistoryIndex: -1,
         currentInput: "",
         cursorPosition: 0,
@@ -137,7 +137,7 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setHistoryProvider(() => state.commandHistory)
-  })
+  }, [state.commandHistory])
 
   const toggle = useCallback(() => dispatch({ type: "TOGGLE" }), [])
 
@@ -204,7 +204,7 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
     if (command === "/resume" && typeof window !== "undefined") {
       const a = document.createElement("a")
       a.href = "/Felipe França - Resume.pdf"
-      a.download = "/Felipe França - Resume.pdf"
+      a.download = "Felipe França - Resume.pdf"
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

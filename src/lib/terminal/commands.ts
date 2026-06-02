@@ -22,8 +22,9 @@ register({
   name: "help",
   description: "List all available commands",
   execute: () => {
-    const unix = getAllCommands().filter((c) => !c.name.startsWith("/") && c.name !== "sudo")
-    const portfolio = getAllCommands().filter((c) => c.name.startsWith("/"))
+    const all = getAllCommands()
+    const unix = all.filter((c) => !c.name.startsWith("/") && c.name !== "sudo")
+    const portfolio = all.filter((c) => c.name.startsWith("/"))
 
     const maxUnix = Math.max(...unix.map((c) => c.name.length))
     const maxPortfolio = Math.max(...portfolio.map((c) => c.name.length))

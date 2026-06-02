@@ -62,6 +62,7 @@ export function LocationPreview({
               height="100%"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
+              sandbox="allow-scripts"
             />
           </div>
           <a
