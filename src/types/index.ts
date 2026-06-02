@@ -57,6 +57,8 @@ export type TerminalLine = {
 
 export type TerminalOutput = {
   lines: TerminalLine[]
+  staggered?: boolean
+  staggerDelay?: number
 }
 
 export type TerminalCommand = {

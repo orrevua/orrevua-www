@@ -6,12 +6,14 @@ import { Terminal } from "lucide-react"
 import { motion } from "framer-motion"
 import { personalInfo } from "@/data/personal"
 import { useTerminal } from "@/components/terminal/terminal-provider"
+import { ClaudeMascot } from "@/components/ui/claude-mascot"
 
 export function Hero() {
   const [imageError, setImageError] = useState(false)
   const { toggle } = useTerminal()
 
   return (
+    <>
     <section className="mx-auto flex max-h-[80vh] max-w-5xl items-center gap-12 px-6 pt-32 pb-20">
       <div className="flex-[3]">
         <motion.h1
@@ -83,5 +85,8 @@ export function Hero() {
         )}
       </div>
     </section>
+
+      <ClaudeMascot />
+    </>
   )
 }

@@ -1,7 +1,7 @@
 "use client"
 
-import { useEffect, useRef } from "react"
-import type { TerminalLine } from "@/types"
+import { useCallback, useEffect, useRef, useState } from "react"
+import type { TerminalLine, TerminalOutput as TerminalOutputType } from "@/types"
 import { useTerminal } from "./terminal-provider"
 
 const WELCOME_TEXT = [
@@ -50,8 +50,39 @@ function OutputLine({ l }: { l: TerminalLine }) {
 
   return (
     <div className={`leading-relaxed whitespace-pre-wrap ${lineStyle(l)}`}>
-      {l.content || " "}
+      {l.content || " "}
     </div>
+  )
+}
+
+function StaggeredOutput({
+  output,
+  onLineReveal,
+}: {
+  output: TerminalOutputType
+  onLineReveal?: () => void
+}) {
+  const [visibleCount, setVisibleCount] = useState(0)
+  const delay = output.staggerDelay ?? 100
+
+  useEffect(() => {
+    if (visibleCount >= output.lines.length) return
+    const timer = setTimeout(() => {
+      setVisibleCount((c) => c + 1)
+      onLineReveal?.()
+    }, delay)
+    return () => clearTimeout(timer)
+  }, [visibleCount, output.lines.length, delay, onLineReveal])
+
+  return (
+    <>
+      {output.lines.slice(0, visibleCount).map((l, j) => (
+        <OutputLine key={j} l={l} />
+      ))}
+      {visibleCount < output.lines.length && (
+        <span className="inline-block w-2 h-4 bg-accent animate-pulse" />
+      )}
+    </>
   )
 }
 
@@ -59,9 +90,13 @@ export function TerminalBody() {
   const { state } = useTerminal()
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [state.history.length])
+  }, [])
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [state.history.length, scrollToBottom])
 
   return (
     <div className="flex-1 overflow-y-auto p-4 font-mono text-sm">
@@ -69,25 +104,36 @@ export function TerminalBody() {
         <div className="mb-4 text-text-secondary">
           {WELCOME_TEXT.map((text, i) => (
             <div key={i} className="leading-relaxed">
-              {text || " "}
+              {text || " "}
             </div>
           ))}
         </div>
       )}
 
-      {state.history.map((entry, i) => (
-        <div key={i} className="mb-3">
-          <div className="flex">
-            <Prompt />
-            <span className="text-text-primary">{entry.input}</span>
+      {state.history.map((entry, i) => {
+        const isLast = i === state.history.length - 1
+
+        return (
+          <div key={i} className="mb-3">
+            <div className="flex">
+              <Prompt />
+              <span className="text-text-primary">{entry.input}</span>
+            </div>
+            <div className="mt-1 ml-0">
+              {isLast && entry.output.staggered ? (
+                <StaggeredOutput
+                  output={entry.output}
+                  onLineReveal={scrollToBottom}
+                />
+              ) : (
+                entry.output.lines.map((l, j) => (
+                  <OutputLine key={j} l={l} />
+                ))
+              )}
+            </div>
           </div>
-          <div className="mt-1 ml-0">
-            {entry.output.lines.map((l, j) => (
-              <OutputLine key={j} l={l} />
-            ))}
-          </div>
-        </div>
-      ))}
+        )
+      })}
 
       <div ref={bottomRef} />
     </div>

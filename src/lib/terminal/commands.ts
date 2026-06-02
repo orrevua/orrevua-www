@@ -174,6 +174,75 @@ register({
 })
 
 register({
+  name: "neofetch",
+  description: "",
+  execute: () => {
+    return output(
+      blank(),
+      line("        ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄        visitor@orrevua", "accent"),
+      line("      ▄█████████████████▄      ─────────────────────"),
+      line("    ▄███████████████████████    OS:       Human/Developer 6.0+"),
+      line("   ████████████████████████▀   Host:     Parnamirim, RN, Brazil"),
+      line("  ▐████████████████████████    Kernel:   B.Sc. IT — UFRN"),
+      line("  ████████████████████████▌    Shell:    Python / TypeScript"),
+      line("  ████████████████████████▌    WM:       Clean Architecture"),
+      line("  ▐███████████████████████▌    Terminal: This one, obviously"),
+      line("   ▀██████████████████████     CPU:      Backend × 6+ cores"),
+      line("    ▀████████████████████▀     Memory:   FastAPI / Django / NestJS"),
+      line("      ▀████████████████▀       Uptime:   Since 2015"),
+      line("        ▀▀▀▀▀▀▀▀▀▀▀▀▀▀        Packages: 28 repos (github)"),
+      blank(),
+      line("  █  █  █  █  █  █  █  █", "accent"),
+      blank(),
+    )
+  },
+})
+
+register({
+  name: "agent",
+  description: "",
+  execute: () => {
+    const result = output(
+      blank(),
+      line("⚡ Initializing agentic workflow...", "accent"),
+      blank(),
+      line("┌─ Architect Agent ────────────────────────────────┐"),
+      line("│  ▸ Analyzing visitor profile...                  │", "dimmed"),
+      line("│  ▸ Reading behavioral patterns...                │", "dimmed"),
+      line("│  ▸ Drafting personalization spec...              │", "dimmed"),
+      line("│  ✓ Spec ready. Delegating to Implementer.       │", "success"),
+      line("└──────────────────────────────────────────────────┘"),
+      blank(),
+      line("┌─ Implementer Agent ──────────────────────────────┐"),
+      line("│  ▸ Receiving spec from Architect...              │", "dimmed"),
+      line("│  ▸ Executing recommendation unit...              │", "dimmed"),
+      line("│  ▸ Running quality checks...                     │", "dimmed"),
+      line("│  ✓ Implementation complete.                      │", "success"),
+      line("└──────────────────────────────────────────────────┘"),
+      blank(),
+      line("📋 Agent Report:", "accent"),
+      line("   You opened a terminal on a portfolio site."),
+      line("   That tells me you're the kind of engineer who"),
+      line("   reads the source, not just the UI."),
+      blank(),
+      line("   This portfolio was built using the same"),
+      line("   Architect → Implementer agentic workflow"),
+      line("   Felipe uses to ship production code with Claude."),
+      blank(),
+      link("   → See how: github.com/orrevua/agentic-skills", "https://github.com/orrevua/agentic-skills"),
+      blank(),
+      line("   Want to work with someone who automates the", "dimmed"),
+      line("   boring stuff and architects the hard stuff?", "dimmed"),
+      link("   → felipevictor67@gmail.com", "mailto:felipevictor67@gmail.com"),
+      blank(),
+    )
+    result.staggered = true
+    result.staggerDelay = 120
+    return result
+  },
+})
+
+register({
   name: "/about",
   description: "About Felipe Franca",
   execute: () => {
