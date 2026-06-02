@@ -1,5 +1,6 @@
 import { personalInfo } from "@/data/personal"
 import { SectionLabel } from "@/components/ui/section-label"
+import { LocationPreview } from "@/components/ui/location-preview"
 
 const snapshot = [
   { key: "Location", value: personalInfo.location },
@@ -41,7 +42,20 @@ export function About() {
                       {item.isStatus && (
                         <span className="mr-1.5 text-success">●</span>
                       )}
-                      {item.value}
+                      {item.key === "Location" ? (
+                        <LocationPreview
+                          address={item.value}
+                          // Use city-name query so Google highlights the city overview
+                          embedUrl={
+                            "https://maps.google.com/maps?q=Parnamirim,+RN&z=11&output=embed"
+                          }
+                          mapUrl={
+                            "https://www.google.com/maps/place/Parnamirim,+RN"
+                          }
+                        />
+                      ) : (
+                        item.value
+                      )}
                     </dd>
                   </div>
                 ))}

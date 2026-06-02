@@ -7,7 +7,7 @@ import { TerminalBody } from "./terminal-body"
 import { TerminalInput } from "./terminal-input"
 
 export function TerminalOverlay() {
-  const { isOpen, dispatch } = useTerminal()
+  const { isOpen, isMinimized, isMaximized, dispatch } = useTerminal()
 
   return (
     <AnimatePresence>
@@ -21,7 +21,7 @@ export function TerminalOverlay() {
           onClick={() => dispatch({ type: "CLOSE" })}
         >
           <motion.div
-            className="flex h-[75vh] w-full max-w-4xl flex-col overflow-hidden rounded-t-xl border-x border-t border-border bg-bg-tertiary shadow-2xl"
+            className={`flex ${isMaximized ? "h-full" : "h-[75vh]"} w-full max-w-4xl flex-col overflow-hidden rounded-t-xl border-x border-t border-border bg-bg-tertiary shadow-2xl`}
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -33,6 +33,18 @@ export function TerminalOverlay() {
             <TerminalInput />
           </motion.div>
         </motion.div>
+      )}
+      {isMinimized && !isOpen && (
+        <div className="fixed bottom-4 z-50 flex w-full justify-center">
+          <button
+            onClick={() => dispatch({ type: "OPEN" })}
+            className="rounded-full border border-border bg-bg-secondary px-3 py-1 text-sm text-text-primary shadow-md"
+            aria-label="Open terminal"
+            title="Open terminal"
+          >
+            visitor@orrevua:~$
+          </button>
+        </div>
       )}
     </AnimatePresence>
   )

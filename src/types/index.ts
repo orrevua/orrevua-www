@@ -73,6 +73,8 @@ export type TerminalHistoryEntry = {
 
 export type TerminalState = {
   isOpen: boolean
+  isMinimized: boolean
+  isMaximized: boolean
   history: TerminalHistoryEntry[]
   commandHistory: string[]
   commandHistoryIndex: number
