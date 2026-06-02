@@ -57,22 +57,22 @@ export function Hero() {
           <button
             onClick={toggle}
             className="flex items-center gap-2 rounded-lg border border-border px-4 py-3 text-text-secondary transition-colors hover:border-accent hover:text-accent"
-            title="Ctrl+T"
+            title="Ctrl+`"
           >
             <Terminal size={16} />
-            <span className="font-mono text-sm">Ctrl+T</span>
+            <span className="font-mono text-sm">Ctrl+`</span>
           </button>
         </motion.div>
       </div>
 
-      <div className="hidden flex-[2] justify-end lg:flex">
+      <div className="hidden flex-2 justify-end lg:flex">
         {imageError ? (
           <div className="flex h-96 w-80 items-center justify-center rounded-2xl border border-border bg-bg-secondary">
             <span className="font-mono text-4xl text-text-tertiary">FF</span>
           </div>
         ) : (
           <Image
-            src="/photo.jpg"
+            src="/photo.png"
             alt={personalInfo.name}
             width={400}
             height={500}

@@ -47,13 +47,6 @@ export function Navbar() {
             ))}
           </ul>
 
-          <span
-            className="animate-blink font-mono text-lg text-accent"
-            title="Ctrl+T"
-          >
-            ▎
-          </span>
-
           <button
             className="text-text-secondary lg:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}

@@ -8,7 +8,7 @@ import { useKeydown } from "@/lib/hooks/use-keydown"
 function TerminalKeyboardBinder() {
   const { toggle } = useTerminal()
   const stableToggle = useCallback(() => toggle(), [toggle])
-  useKeydown("t", true, stableToggle)
+  useKeydown("`", true, stableToggle)
   return null
 }
 

@@ -30,19 +30,20 @@ export function Experience() {
             return (
               <div key={entry.id} className="relative mb-8 last:mb-0">
                 <div
-                  className={`absolute -left-[calc(2rem+5px)] top-1.5 h-3 w-3 rounded-full ${
+                  className={`absolute -left-9.75 top-1.5 h-3 w-3 rounded-full transition-colors ${
                     isActive ? "bg-accent" : "bg-border"
                   }`}
                 />
 
                 <button
-                  className="w-full text-left"
+                  className="group w-full text-left opacity-80 transition-opacity hover:opacity-100"
                   onClick={() => toggle(entry.id)}
                 >
-                  <h3 className="text-xl font-semibold text-text-primary">
-                    {entry.company}
+                  <h3 className="relative inline-block text-xl font-semibold text-text-primary">
+                    <span className="pointer-events-none absolute inset-0 -inset-x-2 rounded opacity-0 blur-md bg-accent/5 transition-opacity group-hover:opacity-100" />
+                    <span className="relative">{entry.company}</span>
                     {entry.note && (
-                      <span className="ml-2 text-sm font-normal text-text-tertiary">
+                      <span className="relative ml-2 text-sm font-normal text-text-tertiary">
                         ({entry.note})
                       </span>
                     )}
@@ -71,7 +72,7 @@ export function Experience() {
                               key={i}
                               className="flex gap-2 text-sm text-text-secondary"
                             >
-                              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-text-tertiary" />
+                              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-text-tertiary" />
                               {bullet}
                             </li>
                           ))}

@@ -11,7 +11,7 @@ export function Footer() {
           <span className="text-xs text-text-tertiary">Built with Next.js</span>
           <span className="flex items-center gap-1 text-xs text-text-tertiary">
             <Terminal size={12} />
-            Ctrl+T
+            Ctrl+`
           </span>
         </div>
       </div>
