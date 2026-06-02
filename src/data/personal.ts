@@ -4,7 +4,7 @@ export const personalInfo: PersonalInfo = {
   name: "Felipe Franca",
   title: "Software Engineer",
   tagline:
-    "I build backend systems that scale. Currently engineering fintech infrastructure at Jeitto.",
+    "I build backend services and microservices that scale. Currently crafting fintech solutions at Jeitto.",
   location: "Parnamirim, RN, Brazil",
   experience: "6+ years",
   focus: "Backend & Architecture",
