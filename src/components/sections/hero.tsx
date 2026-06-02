@@ -5,9 +5,11 @@ import Image from "next/image"
 import { Terminal } from "lucide-react"
 import { motion } from "framer-motion"
 import { personalInfo } from "@/data/personal"
+import { useTerminal } from "@/components/terminal/terminal-provider"
 
 export function Hero() {
   const [imageError, setImageError] = useState(false)
+  const { toggle } = useTerminal()
 
   return (
     <section className="mx-auto flex max-h-[80vh] max-w-5xl items-center gap-12 px-6 pt-32 pb-20">
@@ -53,6 +55,7 @@ export function Hero() {
             View my work
           </a>
           <button
+            onClick={toggle}
             className="flex items-center gap-2 rounded-lg border border-border px-4 py-3 text-text-secondary transition-colors hover:border-accent hover:text-accent"
             title="Ctrl+T"
           >
