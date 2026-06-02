@@ -15,6 +15,8 @@ import { personalInfo } from "@/data/personal"
 
 type Action =
   | { type: "TOGGLE" }
+  | { type: "MINIMIZE" }
+  | { type: "MAXIMIZE" }
   | { type: "OPEN" }
   | { type: "CLOSE" }
   | { type: "SUBMIT_COMMAND"; entry: TerminalHistoryEntry; raw: string }
@@ -25,6 +27,8 @@ type Action =
 
 const initialState: TerminalState = {
   isOpen: false,
+  isMinimized: false,
+  isMaximized: false,
   history: [],
   commandHistory: [],
   commandHistoryIndex: -1,
@@ -35,11 +39,22 @@ const initialState: TerminalState = {
 function reducer(state: TerminalState, action: Action): TerminalState {
   switch (action.type) {
     case "TOGGLE":
+      if (state.isMinimized) {
+        return { ...state, isMinimized: false, isOpen: true }
+      }
       return { ...state, isOpen: !state.isOpen }
+    case "MINIMIZE":
+      return { ...state, isMinimized: true, isOpen: false }
+    case "MAXIMIZE":
+      // Toggle maximize: if already maximized, restore to normal
+      if (state.isMaximized) {
+        return { ...state, isMaximized: false }
+      }
+      return { ...state, isMinimized: false, isOpen: true, isMaximized: true }
     case "OPEN":
-      return { ...state, isOpen: true }
+      return { ...state, isOpen: true, isMinimized: false, isMaximized: false }
     case "CLOSE":
-      return { ...state, isOpen: false }
+      return { ...state, isOpen: false, isMinimized: false, isMaximized: false }
     case "SUBMIT_COMMAND":
       return {
         ...state,
@@ -60,6 +75,8 @@ function reducer(state: TerminalState, action: Action): TerminalState {
         ...state,
         history: [],
         commandHistoryIndex: -1,
+        currentInput: "",
+        cursorPosition: 0,
       }
     case "NAVIGATE_HISTORY_UP": {
       if (state.commandHistory.length === 0) return state
@@ -103,6 +120,8 @@ type TerminalContextValue = {
   state: TerminalState
   dispatch: React.Dispatch<Action>
   isOpen: boolean
+  isMinimized: boolean
+  isMaximized: boolean
   toggle: () => void
   submitCommand: (input: string) => void
   setInput: (input: string) => void
@@ -145,26 +164,13 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
 
     const { command, args } = parseInput(trimmed)
 
-    if (!command.startsWith("/")) {
-      const entry: TerminalHistoryEntry = {
-        input: trimmed,
-        output: output(
-          line(
-            "Commands start with /. Type /help for available commands.",
-            "error"
-          )
-        ),
-      }
-      dispatch({ type: "SUBMIT_COMMAND", entry, raw: trimmed })
-      return
-    }
-
-    if (command === "/clear") {
+    if (command === "clear" || command === "/clear") {
       dispatch({ type: "CLEAR" })
+      dispatch({ type: "SET_INPUT", input: "" })
       return
     }
 
-    if (command === "/exit") {
+    if (command === "exit" || command === "/exit") {
       dispatch({ type: "CLOSE" })
       return
     }
@@ -176,7 +182,7 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
         input: trimmed,
         output: output(
           line(
-            `command not found: ${command}. Type /help for available commands.`,
+            `command not found: ${command}. Type help for available commands.`,
             "error"
           )
         ),
@@ -185,7 +191,6 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    // Side effects for URL-opening commands
     if (command === "/github" && typeof window !== "undefined") {
       const s = personalInfo.socials.find((s) => s.platform === "github")
       window.open(s?.url ?? "https://github.com/orrevua", "_blank")
@@ -219,6 +224,8 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
         state,
         dispatch,
         isOpen: state.isOpen,
+        isMinimized: state.isMinimized,
+        isMaximized: state.isMaximized,
         toggle,
         submitCommand,
         setInput,

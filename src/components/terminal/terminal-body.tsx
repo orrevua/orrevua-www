@@ -6,7 +6,7 @@ import { useTerminal } from "./terminal-provider"
 
 const WELCOME_TEXT = [
   "Welcome to Felipe Franca's portfolio terminal.",
-  "Type /help to see available commands.",
+  "Type help to see available commands.",
   "",
 ]
 

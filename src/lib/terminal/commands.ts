@@ -8,7 +8,6 @@ import {
   line,
   blank,
   link,
-  table,
   output,
   combine,
 } from "./formatter"
@@ -20,14 +19,143 @@ function register(cmd: TerminalCommand) {
 }
 
 register({
-  name: "/help",
+  name: "help",
   description: "List all available commands",
   execute: () => {
-    const rows: [string, string][] = getAllCommands().map((cmd) => [
-      cmd.name,
-      cmd.description,
-    ])
-    return combine(header("Available Commands"), output(...table(rows)))
+    const unix = getAllCommands().filter((c) => !c.name.startsWith("/"))
+    const portfolio = getAllCommands().filter((c) => c.name.startsWith("/"))
+
+    const maxUnix = Math.max(...unix.map((c) => c.name.length))
+    const maxPortfolio = Math.max(...portfolio.map((c) => c.name.length))
+
+    const unixLines = unix.map((cmd) =>
+      line(`  ${cmd.name.padEnd(maxUnix + 2)} ${cmd.description}`)
+    )
+    const portfolioLines = portfolio.map((cmd) =>
+      line(`  ${cmd.name.padEnd(maxPortfolio + 2)} ${cmd.description}`)
+    )
+
+    return combine(
+      header("Commands"),
+      output(blank(), line("Shell", "accent"), ...unixLines, blank()),
+      output(line("Portfolio", "accent"), ...portfolioLines, blank())
+    )
+  },
+})
+
+register({
+  name: "clear",
+  description: "Clear terminal",
+  execute: () => output(),
+})
+
+register({
+  name: "exit",
+  description: "Close terminal",
+  execute: () => output(),
+})
+
+register({
+  name: "ls",
+  description: "List portfolio structure",
+  execute: () => {
+    const expEntries = experiences
+      .filter((e) => !e.isPreCareer)
+      .map((e, i, arr) => {
+        const prefix = i === arr.length - 1 ? "│   └── " : "│   ├── "
+        return line(`${prefix}${e.id}.yml`, "dimmed")
+      })
+
+    const projEntries = projects.map((p, i, arr) => {
+      const prefix = i === arr.length - 1 ? "│   └── " : "│   ├── "
+      return line(`${prefix}${p.name}/`, "dimmed")
+    })
+
+    const skillEntries = skillCategories.map((s, i, arr) => {
+      const prefix = i === arr.length - 1 ? "│   └── " : "│   ├── "
+      return line(`${prefix}${s.name.toLowerCase()}`, "dimmed")
+    })
+
+    return output(
+      line("~/portfolio", "accent"),
+      line("├── about/"),
+      line("│   ├── bio.md", "dimmed"),
+      line("│   └── snapshot.conf", "dimmed"),
+      line("├── experience/"),
+      ...expEntries,
+      line("├── projects/"),
+      ...projEntries,
+      line("├── skills/"),
+      ...skillEntries,
+      line("├── contact.md"),
+      line("└── resume.pdf"),
+    )
+  },
+})
+
+register({
+  name: "whoami",
+  description: "Who are you?",
+  execute: () => {
+    return output(
+      line("visitor — curious enough to open a terminal. I like you.", "success")
+    )
+  },
+})
+
+register({
+  name: "history",
+  description: "Show command history",
+  execute: () => {
+    return output(line("No history available.", "dimmed"))
+  },
+})
+
+register({
+  name: "sudo",
+  description: "Superuser command",
+  execute: (args) => {
+    if (
+      args.length >= 2 &&
+      args[0].toLowerCase() === "hire" &&
+      args[1].toLowerCase() === "felipe"
+    ) {
+      return output(
+        line("┌─────────────────────────────────────────┐", "success"),
+        line("│  ACCESS GRANTED                         │", "success"),
+        line("│                                         │", "success"),
+        line("│  Hiring sequence initiated...           │", "success"),
+        line("│  Sending offer letter...                │", "success"),
+        line("│  ████████████████████████████░░  93%    │", "success"),
+        line("│                                         │", "success"),
+        line("│  Just kidding. But let's talk!          │", "success"),
+        line("│  → felipevictor67@gmail.com             │", "accent"),
+        line("└─────────────────────────────────────────┘", "success")
+      )
+    }
+
+    return output(line("Permission denied.", "error"))
+  },
+})
+
+register({
+  name: "rm",
+  description: "Remove files",
+  execute: () => {
+    return output(line("Nice try. This portfolio is immutable.", "warning"))
+  },
+})
+
+register({
+  name: "vim",
+  description: "Open vim editor",
+  execute: () => {
+    return output(
+      line(
+        "You're stuck now. Just kidding — there's no vim here. Type exit to leave.",
+        "warning"
+      )
+    )
   },
 })
 
@@ -51,14 +179,12 @@ register({
 
     sections.push(
       output(
-        ...table([
-          ["Location", info.location],
-          ["Experience", info.experience],
-          ["Focus", info.focus],
-          ["Education", info.education],
-          ["English", info.english],
-          ["Status", info.status],
-        ])
+        line("Location      " + info.location, "dimmed"),
+        line("Experience    " + info.experience, "dimmed"),
+        line("Focus         " + info.focus, "dimmed"),
+        line("Education     " + info.education, "dimmed"),
+        line("English       " + info.english, "dimmed"),
+        line("Status        " + info.status, "dimmed"),
       )
     )
 
@@ -223,18 +349,6 @@ register({
 })
 
 register({
-  name: "/clear",
-  description: "Clear terminal",
-  execute: () => output(),
-})
-
-register({
-  name: "/exit",
-  description: "Close terminal",
-  execute: () => output(),
-})
-
-register({
   name: "/resume",
   description: "Download resume",
   execute: () => {
@@ -287,43 +401,6 @@ register({
   },
 })
 
-register({
-  name: "/whoami",
-  description: "Who are you?",
-  execute: () => {
-    return output(
-      line("visitor — curious enough to open a terminal. I like you.", "success")
-    )
-  },
-})
-
-register({
-  name: "/sudo",
-  description: "Superuser command",
-  execute: (args) => {
-    if (
-      args.length >= 2 &&
-      args[0].toLowerCase() === "hire" &&
-      args[1].toLowerCase() === "felipe"
-    ) {
-      return output(
-        line("┌─────────────────────────────────────────┐", "success"),
-        line("│  ACCESS GRANTED                         │", "success"),
-        line("│                                         │", "success"),
-        line("│  Hiring sequence initiated...           │", "success"),
-        line("│  Sending offer letter...                │", "success"),
-        line("│  ████████████████████████████░░  93%    │", "success"),
-        line("│                                         │", "success"),
-        line("│  Just kidding. But let's talk!          │", "success"),
-        line("│  → felipevictor67@gmail.com             │", "accent"),
-        line("└─────────────────────────────────────────┘", "success")
-      )
-    }
-
-    return output(line("Permission denied.", "error"))
-  },
-})
-
 const motdMessages = [
   "\"Clean code is not written by following a set of rules.\" — Robert C. Martin",
   "\"Any fool can write code that a computer can understand. Good programmers write code that humans can understand.\" — Martin Fowler",
@@ -335,38 +412,9 @@ register({
   name: "/motd",
   description: "Message of the day",
   execute: () => {
-    const msg = motdMessages[Math.floor(Math.random() * motdMessages.length)]
+    const dayIndex = Math.floor(Date.now() / 86400000)
+    const msg = motdMessages[dayIndex % motdMessages.length]
     return output(blank(), line(msg, "accent"), blank())
-  },
-})
-
-register({
-  name: "/rm",
-  description: "Remove files",
-  execute: () => {
-    return output(line("Nice try. This portfolio is immutable.", "warning"))
-  },
-})
-
-register({
-  name: "/vim",
-  description: "Open vim editor",
-  execute: () => {
-    return output(
-      line(
-        "You're stuck now. Just kidding — there's no vim here. Type /exit to leave.",
-        "warning"
-      )
-    )
-  },
-})
-
-register({
-  name: "/history",
-  description: "Show command history",
-  execute: () => {
-    // Placeholder — actual history is injected via setHistoryProvider
-    return output(line("No history available.", "dimmed"))
   },
 })
 
@@ -376,14 +424,14 @@ export function setHistoryProvider(provider: () => string[]) {
   historyProvider = provider
 
   register({
-    name: "/history",
+    name: "history",
     description: "Show command history",
     execute: () => {
-      const history = historyProvider ? historyProvider() : []
-      if (history.length === 0) {
+      const hist = historyProvider ? historyProvider() : []
+      if (hist.length === 0) {
         return output(line("No commands in history.", "dimmed"))
       }
-      const lines = history.map((cmd, i) =>
+      const lines = hist.map((cmd, i) =>
         line(`  ${String(i + 1).padStart(3)}  ${cmd}`, "dimmed")
       )
       return combine(header("Command History"), output(...lines))
