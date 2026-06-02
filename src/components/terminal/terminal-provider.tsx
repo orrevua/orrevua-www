@@ -203,8 +203,8 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
 
     if (command === "/resume" && typeof window !== "undefined") {
       const a = document.createElement("a")
-      a.href = "/resume.pdf"
-      a.download = "resume.pdf"
+      a.href = "/Felipe França - Resume.pdf"
+      a.download = "/Felipe França - Resume.pdf"
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)

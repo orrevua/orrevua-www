@@ -14,7 +14,7 @@ export const experiences: ExperienceEntry[] = [
       "Applying DDD and Clean Architecture to refactor legacy services",
       "Optimizing registration and login processes with async FastAPI operations",
     ],
-    technologies: ["Python", "FastAPI", "DDD", "Clean Architecture", "AWS"],
+    technologies: ["Python", "FastAPI", "DDD", "Clean Architecture", "Hexagonal Architecture", "GCP"],
     isPreCareer: false,
   },
   {

@@ -22,7 +22,7 @@ register({
   name: "help",
   description: "List all available commands",
   execute: () => {
-    const unix = getAllCommands().filter((c) => !c.name.startsWith("/"))
+    const unix = getAllCommands().filter((c) => !c.name.startsWith("/") && c.name !== "sudo")
     const portfolio = getAllCommands().filter((c) => c.name.startsWith("/"))
 
     const maxUnix = Math.max(...unix.map((c) => c.name.length))
@@ -115,26 +115,40 @@ register({
   name: "sudo",
   description: "Superuser command",
   execute: (args) => {
-    if (
-      args.length >= 2 &&
-      args[0].toLowerCase() === "hire" &&
-      args[1].toLowerCase() === "felipe"
-    ) {
+    if (args.length > 0 && args[0].toLowerCase() === "su") {
       return output(
         line("┌─────────────────────────────────────────┐", "success"),
-        line("│  ACCESS GRANTED                         │", "success"),
+        line("│  ROOT AUTHENTICATION SUCCEEDED          │", "success"),
         line("│                                         │", "success"),
-        line("│  Hiring sequence initiated...           │", "success"),
-        line("│  Sending offer letter...                │", "success"),
+        line("│  Hiring sequence initiated...             │", "success"),
+        line("│  Sending offer letter...                  │", "success"),
         line("│  ████████████████████████████░░  93%    │", "success"),
         line("│                                         │", "success"),
         line("│  Just kidding. But let's talk!          │", "success"),
-        line("│  → felipevictor67@gmail.com             │", "accent"),
+        line("│  → felipevictor67@gmail.com            │", "accent"),
         line("└─────────────────────────────────────────┘", "success")
       )
     }
-
     return output(line("Permission denied.", "error"))
+  },
+})
+
+register({
+  name: "sudo su",
+  description: "Switch to superuser",
+  execute: () => {
+    return output(
+      line("┌─────────────────────────────────────────┐", "success"),
+      line("│  ROOT AUTHENTICATION SUCCEEDED          │", "success"),
+      line("│                                         │", "success"),
+      line("│  Hiring sequence initiated...             │", "success"),
+      line("│  Sending offer letter...                  │", "success"),
+      line("│  ████████████████████████████░░  93%    │", "success"),
+      line("│                                         │", "success"),
+      line("│  Just kidding. But let's talk!          │", "success"),
+      line("│  → felipevictor67@gmail.com            │", "accent"),
+      line("└─────────────────────────────────────────┘", "success")
+    )
   },
 })
 

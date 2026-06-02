@@ -55,7 +55,7 @@ export function Contact() {
         </div>
 
         <a
-          href="/resume.pdf"
+          href="/Felipe França - Resume.pdf"
           className="mt-6 inline-block font-mono text-sm text-text-tertiary transition-colors hover:text-text-secondary"
         >
           Download Resume &darr;
