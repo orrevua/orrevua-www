@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
-import { octokit, owner, repo } from "@/lib/github"
+import { octokit, owner, repo, FEEDBACKS_PATH, BASE_BRANCH } from "@/lib/github"
+import type { Feedback } from "@/types"
 
 export async function POST(req: NextRequest) {
   const authHeader = req.headers.get("Authorization")
@@ -49,6 +50,53 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({
         success: true,
         message: "Feedback rejected and branch deleted.",
+      })
+    }
+
+    if (action === "revert") {
+      const feedbackId = branchName.replace("feedback/", "")
+
+      const { data: fileData } = await octokit.repos.getContent({
+        owner,
+        repo,
+        path: FEEDBACKS_PATH,
+        ref: BASE_BRANCH,
+      })
+
+      if (Array.isArray(fileData) || fileData.type !== "file") {
+        return NextResponse.json(
+          { error: "Could not read feedbacks file." },
+          { status: 500 }
+        )
+      }
+
+      const content = Buffer.from(fileData.content, "base64").toString("utf-8")
+      const feedbacks: Feedback[] = JSON.parse(content)
+      const filtered = feedbacks.filter((f) => f.id !== feedbackId)
+
+      if (filtered.length === feedbacks.length) {
+        return NextResponse.json(
+          { error: `Feedback ${feedbackId} not found in feedbacks.json.` },
+          { status: 404 }
+        )
+      }
+
+      const updatedJson = JSON.stringify(filtered, null, 2) + "\n"
+      const encodedContent = Buffer.from(updatedJson, "utf-8").toString("base64")
+
+      await octokit.repos.createOrUpdateFileContents({
+        owner,
+        repo,
+        path: FEEDBACKS_PATH,
+        message: `revert: remove feedback ${feedbackId} (PR #${prNumber})`,
+        content: encodedContent,
+        branch: BASE_BRANCH,
+        sha: fileData.sha,
+      })
+
+      return NextResponse.json({
+        success: true,
+        message: `Feedback ${feedbackId} removed. Vercel will redeploy.`,
       })
     }
 

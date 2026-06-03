@@ -7,6 +7,7 @@ interface FeedbackPR {
   prNumber: number
   title: string
   branchName: string
+  feedbackId?: string
   htmlUrl: string
   data: {
     name: string
@@ -14,6 +15,8 @@ interface FeedbackPR {
     date: string
   }
 }
+
+type Tab = "pending" | "merged"
 
 const inputClassName =
   "w-full rounded-lg border border-border bg-bg-tertiary px-4 py-3 text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
@@ -25,13 +28,15 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false)
   const [processingId, setProcessingId] = useState<number | null>(null)
   const [status, setStatus] = useState("")
+  const [tab, setTab] = useState<Tab>("pending")
 
-  async function fetchFeedbacks(token: string) {
+  async function fetchFeedbacks(token: string, state: Tab = tab) {
     setLoading(true)
     setStatus("")
 
     try {
-      const res = await fetch("/api/admin/list", {
+      const query = state === "merged" ? "?state=merged" : ""
+      const res = await fetch(`/api/admin/list${query}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -53,12 +58,21 @@ export default function AdminPage() {
 
   async function handleLogin(e: FormEvent) {
     e.preventDefault()
-    await fetchFeedbacks(adminToken)
+    await fetchFeedbacks(adminToken, "pending")
   }
 
-  async function handleModerate(prNumber: number, branchName: string, action: "approve" | "reject") {
-    const label = action === "approve" ? "approve" : "reject"
-    if (!confirm(`Are you sure you want to ${label} PR #${prNumber}?`)) return
+  function handleTabSwitch(newTab: Tab) {
+    setTab(newTab)
+    setFeedbacks([])
+    fetchFeedbacks(adminToken, newTab)
+  }
+
+  async function handleModerate(
+    prNumber: number,
+    branchName: string,
+    action: "approve" | "reject" | "revert"
+  ) {
+    if (!confirm(`Are you sure you want to ${action} PR #${prNumber}?`)) return
 
     setProcessingId(prNumber)
     setStatus("")
@@ -75,14 +89,14 @@ export default function AdminPage() {
 
       if (!res.ok) {
         const body = await res.json().catch(() => null)
-        throw new Error(body?.error ?? `Failed to ${label}.`)
+        throw new Error(body?.error ?? `Failed to ${action}.`)
       }
 
       const body = await res.json()
       setFeedbacks((prev) => prev.filter((f) => f.prNumber !== prNumber))
-      setStatus(body.message ?? `PR #${prNumber} ${label}d successfully.`)
+      setStatus(body.message ?? `PR #${prNumber} — ${action} successful.`)
     } catch (err) {
-      setStatus(err instanceof Error ? err.message : `Failed to ${label}.`)
+      setStatus(err instanceof Error ? err.message : `Failed to ${action}.`)
     } finally {
       setProcessingId(null)
     }
@@ -93,6 +107,7 @@ export default function AdminPage() {
     setAdminToken("")
     setFeedbacks([])
     setStatus("")
+    setTab("pending")
   }
 
   if (!isAuthenticated) {
@@ -102,9 +117,19 @@ export default function AdminPage() {
           Feedback Moderation
         </h1>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            value="admin"
+            readOnly
+            className="hidden"
+          />
           <input
             type="password"
+            name="password"
+            autoComplete="current-password"
             required
             placeholder="Admin token"
             value={adminToken}
@@ -133,7 +158,7 @@ export default function AdminPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-semibold text-text-primary">
-            Pending Feedbacks
+            Feedback Moderation
           </h1>
           <Link
             href="/"
@@ -161,6 +186,29 @@ export default function AdminPage() {
         </div>
       </div>
 
+      <div className="mb-6 flex gap-1 rounded-lg border border-border bg-bg-tertiary p-1">
+        <button
+          onClick={() => handleTabSwitch("pending")}
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            tab === "pending"
+              ? "bg-bg-secondary text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
+          }`}
+        >
+          Pending
+        </button>
+        <button
+          onClick={() => handleTabSwitch("merged")}
+          className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+            tab === "merged"
+              ? "bg-bg-secondary text-text-primary"
+              : "text-text-tertiary hover:text-text-secondary"
+          }`}
+        >
+          Approved
+        </button>
+      </div>
+
       {status && (
         <p className="mb-6 rounded-lg border border-border bg-bg-secondary px-4 py-3 text-sm text-text-secondary">
           {status}
@@ -169,7 +217,11 @@ export default function AdminPage() {
 
       {feedbacks.length === 0 ? (
         <div className="rounded-xl border border-border bg-bg-secondary p-8 text-center">
-          <p className="text-text-secondary">No pending feedback PRs</p>
+          <p className="text-text-secondary">
+            {tab === "pending"
+              ? "No pending feedback PRs"
+              : "No approved feedbacks yet"}
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -207,21 +259,45 @@ export default function AdminPage() {
               </p>
 
               <div className="mt-4 flex gap-3">
-                <button
-                  onClick={() => handleModerate(fb.prNumber, fb.branchName, "approve")}
-                  disabled={processingId !== null}
-                  className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-bg-primary disabled:opacity-60"
-                >
-                  {processingId === fb.prNumber ? "Processing..." : "Approve"}
-                </button>
+                {tab === "pending" ? (
+                  <>
+                    <button
+                      onClick={() =>
+                        handleModerate(fb.prNumber, fb.branchName, "approve")
+                      }
+                      disabled={processingId !== null}
+                      className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-bg-primary disabled:opacity-60"
+                    >
+                      {processingId === fb.prNumber
+                        ? "Processing..."
+                        : "Approve"}
+                    </button>
 
-                <button
-                  onClick={() => handleModerate(fb.prNumber, fb.branchName, "reject")}
-                  disabled={processingId !== null}
-                  className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-bg-primary disabled:opacity-60"
-                >
-                  {processingId === fb.prNumber ? "Processing..." : "Reject"}
-                </button>
+                    <button
+                      onClick={() =>
+                        handleModerate(fb.prNumber, fb.branchName, "reject")
+                      }
+                      disabled={processingId !== null}
+                      className="rounded-lg bg-error px-4 py-2 text-sm font-medium text-bg-primary disabled:opacity-60"
+                    >
+                      {processingId === fb.prNumber
+                        ? "Processing..."
+                        : "Reject"}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() =>
+                      handleModerate(fb.prNumber, fb.branchName, "revert")
+                    }
+                    disabled={processingId !== null}
+                    className="rounded-lg border border-error bg-transparent px-4 py-2 text-sm font-medium text-error disabled:opacity-60"
+                  >
+                    {processingId === fb.prNumber
+                      ? "Reverting..."
+                      : "Revert"}
+                  </button>
+                )}
               </div>
             </div>
           ))}
