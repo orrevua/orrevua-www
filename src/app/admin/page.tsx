@@ -12,7 +12,11 @@ interface FeedbackPR {
   reverted?: boolean
   data: {
     name: string
+    role: string
+    company: string
     message: string
+    messageEn: string
+    messagePt: string
     date: string
   }
 }
@@ -30,6 +34,10 @@ export default function AdminPage() {
   const [processingId, setProcessingId] = useState<number | null>(null)
   const [status, setStatus] = useState("")
   const [tab, setTab] = useState<Tab>("pending")
+  const [translations, setTranslations] = useState<
+    Record<string, { messageEn: string; messagePt: string }>
+  >({})
+  const [savingTranslation, setSavingTranslation] = useState<string | null>(null)
 
   async function fetchFeedbacks(token: string, state: Tab = tab) {
     setLoading(true)
@@ -48,6 +56,16 @@ export default function AdminPage() {
 
       const data: FeedbackPR[] = await res.json()
       setFeedbacks(data)
+      const initialTranslations: Record<string, { messageEn: string; messagePt: string }> = {}
+      for (const fb of data) {
+        if (fb.feedbackId) {
+          initialTranslations[fb.feedbackId] = {
+            messageEn: fb.data.messageEn,
+            messagePt: fb.data.messagePt,
+          }
+        }
+      }
+      setTranslations((prev) => ({ ...prev, ...initialTranslations }))
       setIsAuthenticated(true)
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Failed to authenticate.")
@@ -109,6 +127,43 @@ export default function AdminPage() {
     setFeedbacks([])
     setStatus("")
     setTab("pending")
+    setTranslations({})
+  }
+
+  async function handleSaveTranslation(fb: FeedbackPR) {
+    if (!fb.feedbackId) return
+    const t = translations[fb.feedbackId]
+    if (!t) return
+
+    setSavingTranslation(fb.feedbackId)
+    setStatus("")
+
+    try {
+      const res = await fetch("/api/admin/update-translation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminToken}`,
+        },
+        body: JSON.stringify({
+          branchName: fb.branchName,
+          feedbackId: fb.feedbackId,
+          messageEn: t.messageEn,
+          messagePt: t.messagePt,
+        }),
+      })
+
+      if (!res.ok) {
+        const body = await res.json().catch(() => null)
+        throw new Error(body?.error ?? "Failed to save translations.")
+      }
+
+      setStatus(`Translations saved for ${fb.feedbackId}.`)
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : "Failed to save translations.")
+    } finally {
+      setSavingTranslation(null)
+    }
   }
 
   if (!isAuthenticated) {
@@ -255,9 +310,73 @@ export default function AdminPage() {
                 </a>
               </div>
 
+              {(fb.data.role || fb.data.company) && (
+                <p className="mt-1 font-mono text-sm text-accent">
+                  {[fb.data.role, fb.data.company].filter(Boolean).join(" - ")}
+                </p>
+              )}
+
               <p className="mt-3 whitespace-pre-wrap text-text-secondary">
                 {fb.data.message}
               </p>
+
+              {tab === "pending" && fb.feedbackId && translations[fb.feedbackId] && (
+                <div className="mt-4 space-y-3 rounded-lg border border-border bg-bg-tertiary p-4">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-text-tertiary">
+                    Translations
+                  </p>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-text-secondary">
+                      English
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={translations[fb.feedbackId].messageEn}
+                      onChange={(e) =>
+                        setTranslations((prev) => ({
+                          ...prev,
+                          [fb.feedbackId!]: {
+                            ...prev[fb.feedbackId!],
+                            messageEn: e.target.value,
+                          },
+                        }))
+                      }
+                      className={inputClassName + " text-sm"}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-medium text-text-secondary">
+                      Português
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={translations[fb.feedbackId].messagePt}
+                      onChange={(e) =>
+                        setTranslations((prev) => ({
+                          ...prev,
+                          [fb.feedbackId!]: {
+                            ...prev[fb.feedbackId!],
+                            messagePt: e.target.value,
+                          },
+                        }))
+                      }
+                      className={inputClassName + " text-sm"}
+                    />
+                  </div>
+
+                  <button
+                    onClick={() => handleSaveTranslation(fb)}
+                    disabled={savingTranslation !== null}
+                    className="rounded-lg border border-accent px-3 py-1.5 text-xs font-medium text-accent transition-colors hover:bg-accent hover:text-bg-primary disabled:opacity-60"
+                  >
+                    {savingTranslation === fb.feedbackId
+                      ? "Saving..."
+                      : "Save translations"}
+                  </button>
+                </div>
+              )}
 
               <div className="mt-4 flex gap-3">
                 {tab === "pending" ? (

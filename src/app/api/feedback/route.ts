@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { octokit, owner, repo, FEEDBACKS_PATH, BASE_BRANCH } from "@/lib/github"
 import { checkRateLimit } from "@/lib/rate-limit"
+import { translateFeedback } from "@/lib/translate"
 import type { Feedback } from "@/types"
 
 function sanitize(value: unknown): string {
@@ -14,31 +15,42 @@ function sanitizeForCommit(value: string): string {
 
 function validate(body: Record<string, unknown>): {
   valid: true
-  data: { name: string; role: string; email: string; message: string }
+  data: { name: string; role: string; company: string; message: string; honeypot: string }
 } | { valid: false; error: string } {
   const name = sanitize(body.name)
   const role = sanitize(body.role)
-  const email = sanitize(body.email)
+  const company = sanitize(body.company)
   const message = sanitize(body.message)
+  const honeypot = sanitize(body.website)
 
   if (!name || name.length > 100)
     return { valid: false, error: "Name is required and must be under 100 characters." }
   if (role.length > 100)
     return { valid: false, error: "Role must be under 100 characters." }
-  if (email.length > 200)
-    return { valid: false, error: "Email must be under 200 characters." }
+  if (company.length > 100)
+    return { valid: false, error: "Company must be under 100 characters." }
   if (!message || message.length < 10)
     return { valid: false, error: "Message is required and must be at least 10 characters." }
   if (message.length > 1000)
     return { valid: false, error: "Message must be under 1000 characters." }
 
-  return { valid: true, data: { name, role, email, message } }
+  return { valid: true, data: { name, role, company, message, honeypot } }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const ipHeader = request.headers.get("x-forwarded-for") ?? ""
-    const ip = ipHeader.split(",")[0]?.trim() || "unknown"
+    const origin = request.headers.get("origin")
+    const host = request.headers.get("host")
+    if (!origin || !host || new URL(origin).host !== host) {
+      return NextResponse.json(
+        { error: "Forbidden." },
+        { status: 403 }
+      )
+    }
+
+    const ip = request.headers.get("x-real-ip")
+      ?? request.headers.get("x-forwarded-for")?.split(",").pop()?.trim()
+      ?? "unknown"
     const limit = await checkRateLimit(ip)
     if (!limit.allowed) {
       return NextResponse.json(
@@ -59,7 +71,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: result.error }, { status: 400 })
     }
 
-    const { name, role, email, message } = result.data
+    const { name, role, company, message, honeypot } = result.data
+
+    if (honeypot) {
+      return NextResponse.json({ success: true }, { status: 201 })
+    }
+
     const safeName = sanitizeForCommit(name)
     const feedbackId = "fb_" + Date.now()
     const newBranchName = "feedback/" + feedbackId
@@ -98,11 +115,16 @@ export async function POST(request: NextRequest) {
       if (!is404) throw err
     }
 
+    const { messageEn, messagePt } = await translateFeedback(message)
+
     const newFeedback: Feedback = {
       id: feedbackId,
       name,
       role,
+      company,
       message,
+      messageEn,
+      messagePt,
       date: new Date().toISOString(),
     }
 
@@ -123,10 +145,19 @@ export async function POST(request: NextRequest) {
     const prBody = [
       `**Name:** ${name}`,
       role ? `**Role:** ${role}` : null,
-      email ? `**Email:** ${email}` : null,
+      company ? `**Company:** ${company}` : null,
       "",
-      `**Message:**`,
+      `**Message (original):**`,
       `> ${message}`,
+      "",
+      `**English:**`,
+      `> ${messageEn}`,
+      "",
+      `**Portuguese:**`,
+      `> ${messagePt}`,
+      "",
+      "---",
+      "Translations were auto-generated. Edit them in the admin panel before approving if needed.",
     ]
       .filter((line) => line !== null)
       .join("\n")
@@ -142,7 +173,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 201 })
   } catch (error) {
-    console.error("Feedback submission failed:", error)
+    const message = error instanceof Error ? error.message : "Unknown error"
+    console.error("Feedback submission failed:", message)
     return NextResponse.json(
       { error: "An unexpected error occurred. Please try again later." },
       { status: 500 }
