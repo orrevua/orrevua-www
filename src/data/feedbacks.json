@@ -8,5 +8,15 @@
     "messageEn": "I had the pleasure of working alongside Felipe and consistently admired both his technical skills and professional attitude. He is a highly reliable engineer who approaches challenges with a problem-solving mindset, writes clean and maintainable code, and always strives to deliver high-quality solutions.\n\nBeyond his technical expertise, Felipe is someone you can trust to handle responsibilities with professionalism, integrity, and dedication. Any team would be fortunate to have him, and I would gladly work with him again in the future.",
     "messagePt": "Tive o prazer de trabalhar ao lado de Felipe e sempre admirei suas habilidades técnicas e atitude profissional. Ele é um engenheiro altamente confiável que aborda desafios com uma mentalidade de resolução de problemas, escreve código limpo e sustentável e sempre se esforça para oferecer soluções de alta qualidade.\n\nAlém de sua experiência técnica, Felipe é alguém em quem você pode confiar para lidar com as responsabilidades com profissionalismo, integridade e dedicação. Qualquer equipe teria a sorte de tê-lo, e eu teria prazer em trabalhar com ele novamente no futuro.",
     "date": "2026-06-03T12:55:39.130Z"
+  },
+  {
+    "id": "fb_1780514646593",
+    "name": "Felipe França Teste",
+    "role": "Software Engineer II",
+    "company": "Jeitto",
+    "message": "This is a testing message for reviewing the consistency of the EN to PT translation when the PR merging and building phase finishes. The expected result is for this text to be fully translated in portuguese when i change the portfolio locale configuration to PT. The same functionality also works the opposite way.",
+    "messageEn": "This is a testing message for reviewing the consistency of the EN to PT translation when the PR merging and building phase finishes. The expected result is for this text to be fully translated in portuguese when i change the portfolio locale configuration to PT. The same functionality also works the opposite way.",
+    "messagePt": "Esta é uma mensagem de teste para revisar a consistência da tradução de EN para PT quando a fase de fusão e construção de PR terminar. O resultado esperado é que este texto seja totalmente traduzido para o português quando eu alterar a configuração local do portfólio para PT. A mesma funcionalidade também funciona da maneira oposta.",
+    "date": "2026-06-03T19:24:09.214Z"
   }
 ]
