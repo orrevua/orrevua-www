@@ -7,25 +7,32 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
   }
 
+  const state = req.nextUrl.searchParams.get("state") === "merged" ? "closed" : "open"
+
   try {
     const { data: pulls } = await octokit.pulls.list({
       owner,
       repo,
-      state: "open",
+      state,
       per_page: 50,
     })
 
     const feedbackPRs = pulls
-      .filter((pr) => pr.head.ref.startsWith("feedback/"))
+      .filter((pr) => {
+        if (!pr.head.ref.startsWith("feedback/")) return false
+        if (state === "closed") return pr.merged_at !== null
+        return true
+      })
       .map((pr) => ({
         prNumber: pr.number,
         title: pr.title,
         branchName: pr.head.ref,
         htmlUrl: pr.html_url,
+        mergeCommitSha: pr.merge_commit_sha ?? null,
         data: {
           name: pr.title.replace("💬 New feedback from ", ""),
           message: pr.body || "",
-          date: pr.created_at,
+          date: pr.merged_at ?? pr.created_at,
         },
       }))
 
