@@ -9,6 +9,7 @@ interface FeedbackPR {
   branchName: string
   feedbackId?: string
   htmlUrl: string
+  reverted?: boolean
   data: {
     name: string
     message: string
