@@ -190,6 +190,7 @@ export const translations: Translations = {
       contactHeader: "Contato",
       githubOpening: "Abrindo GitHub...",
       linkedinOpening: "Abrindo LinkedIn...",
+      adminOpening: "Abrindo painel administrativo...",
       resumeDownloading: "Baixando currículo...",
       stackHeader: "Stack Tecnológica",
       stackIntro: "Este portfólio foi construído com:",

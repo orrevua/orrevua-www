@@ -23,7 +23,7 @@ register({
   name: "help",
   description: "List all available commands",
   execute: (_args, t) => {
-    const all = getAllCommands()
+    const all = getAllCommands().filter((c) => !c.hidden)
     const unix = all.filter((c) => !c.name.startsWith("/") && c.name !== "sudo")
     const portfolio = all.filter((c) => c.name.startsWith("/"))
 
@@ -464,11 +464,12 @@ register({
 register({
   name: "/admin",
   description: "Open admin panel",
+  hidden: true,
   execute: (_args, t) => {
     if (typeof window !== "undefined") {
       window.open("/admin", "_blank")
     }
-    return output(line("Opening admin panel...", "success"), link("/admin", "/admin"))
+    return output(line(t.terminal.output.adminOpening, "success"), link("/admin", "/admin"))
   },
 })
 

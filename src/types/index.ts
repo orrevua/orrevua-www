@@ -65,6 +65,7 @@ export type TerminalCommand = {
   name: string
   description: string
   usage?: string
+  hidden?: boolean
   execute: (args: string[], t: import("@/i18n/types").Translations) => TerminalOutput
 }
 

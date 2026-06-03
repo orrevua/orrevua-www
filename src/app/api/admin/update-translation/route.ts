@@ -23,6 +23,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing parameters." }, { status: 400 })
     }
 
+    if (!/^feedback\/fb_\d+$/.test(branchName) || !/^fb_\d+$/.test(feedbackId)) {
+      return NextResponse.json({ error: "Invalid parameters." }, { status: 400 })
+    }
+
     const { data: fileData } = await octokit.repos.getContent({
       owner,
       repo,
