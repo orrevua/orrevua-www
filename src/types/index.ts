@@ -65,7 +65,7 @@ export type TerminalCommand = {
   name: string
   description: string
   usage?: string
-  execute: (args: string[]) => TerminalOutput
+  execute: (args: string[], t: import("@/i18n/types").Translations) => TerminalOutput
 }
 
 export type TerminalHistoryEntry = {

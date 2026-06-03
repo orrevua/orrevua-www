@@ -3,12 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import type { TerminalLine, TerminalOutput as TerminalOutputType } from "@/types"
 import { useTerminal } from "./terminal-provider"
-
-const WELCOME_TEXT = [
-  "Welcome to Felipe Franca's portfolio terminal.",
-  "Type help to see available commands.",
-  "",
-]
+import { useTranslation } from "@/i18n/context"
 
 function Prompt() {
   return (
@@ -88,6 +83,7 @@ function StaggeredOutput({
 
 export function TerminalBody() {
   const { state } = useTerminal()
+  const { t } = useTranslation()
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const scrollToBottom = useCallback(() => {
@@ -102,7 +98,7 @@ export function TerminalBody() {
     <div className="flex-1 overflow-y-auto p-4 font-mono text-sm">
       {state.history.length === 0 && (
         <div className="mb-4 text-text-secondary">
-          {WELCOME_TEXT.map((text, i) => (
+          {t.terminal.welcome.map((text, i) => (
             <div key={i} className="leading-relaxed">
               {text || " "}
             </div>

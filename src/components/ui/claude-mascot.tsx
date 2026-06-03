@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useTerminal } from "@/components/terminal/terminal-provider"
+import { useTranslation } from "@/i18n/context"
 
 const CLAUDE_LOGO = [
   "     ▐▛███▜▌     ",
@@ -13,6 +14,7 @@ const CLAUDE_LOGO = [
 export function ClaudeMascot() {
   const [visible, setVisible] = useState(false)
   const { isOpen } = useTerminal()
+  const { t } = useTranslation()
 
   useEffect(() => {
     const delay = 15000 + Math.random() * 20000
@@ -42,14 +44,14 @@ export function ClaudeMascot() {
         >
           <div className="relative max-w-xs rounded-xl border border-border bg-bg-secondary px-4 py-3 shadow-lg">
             <p className="text-sm text-text-secondary">
-              Psst... try typing{" "}
+              {t.mascot.hint}{" "}
               <code className="rounded bg-bg-primary px-1.5 py-0.5 font-mono text-accent">
-                agent
+                {t.mascot.hintCommand}
               </code>{" "}
               in the terminal
             </p>
             <p className="mt-1 text-xs text-text-tertiary">
-              Press <kbd className="font-mono text-accent">Ctrl+`</kbd> to open
+              {t.mascot.hintOpen}
             </p>
             <div className="absolute -right-2 bottom-3 h-3 w-3 rotate-45 border-r border-b border-border bg-bg-secondary" />
           </div>

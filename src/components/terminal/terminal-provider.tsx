@@ -12,6 +12,7 @@ import { parseInput } from "@/lib/terminal/parser"
 import { getCommand, setHistoryProvider } from "@/lib/terminal/commands"
 import { output, line } from "@/lib/terminal/formatter"
 import { personalInfo } from "@/data/personal"
+import { useTranslation } from "@/i18n/context"
 
 type Action =
   | { type: "TOGGLE" }
@@ -46,7 +47,6 @@ function reducer(state: TerminalState, action: Action): TerminalState {
     case "MINIMIZE":
       return { ...state, isMinimized: true, isOpen: false }
     case "MAXIMIZE":
-      // Toggle maximize: if already maximized, restore to normal
       if (state.isMaximized) {
         return { ...state, isMaximized: false }
       }
@@ -134,6 +134,7 @@ const TerminalContext = createContext<TerminalContextValue | null>(null)
 
 export function TerminalProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const { t } = useTranslation()
 
   useEffect(() => {
     setHistoryProvider(() => state.commandHistory)
@@ -182,7 +183,7 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
         input: trimmed,
         output: output(
           line(
-            `command not found: ${command}. Type help for available commands.`,
+            t.terminal.commandNotFound.replace("{command}", command),
             "error"
           )
         ),
@@ -210,13 +211,13 @@ export function TerminalProvider({ children }: { children: React.ReactNode }) {
       document.body.removeChild(a)
     }
 
-    const result = cmd.execute(args)
+    const result = cmd.execute(args, t)
     const entry: TerminalHistoryEntry = {
       input: trimmed,
       output: result,
     }
     dispatch({ type: "SUBMIT_COMMAND", entry, raw: trimmed })
-  }, [])
+  }, [t])
 
   return (
     <TerminalContext.Provider

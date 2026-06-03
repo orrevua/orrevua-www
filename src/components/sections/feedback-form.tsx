@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, type FormEvent } from "react"
+import { useTranslation } from "@/i18n/context"
 
 const inputClassName =
   "w-full rounded-lg border border-border bg-bg-tertiary px-4 py-3 text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
@@ -14,6 +15,8 @@ export function FeedbackForm() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState("")
+
+  const { t } = useTranslation()
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -30,7 +33,7 @@ export function FeedbackForm() {
 
       if (!res.ok) {
         const body = await res.json().catch(() => null)
-        throw new Error(body?.error ?? "Something went wrong. Please try again.")
+        throw new Error(body?.error ?? t.feedback.errorMessage)
       }
 
       setSuccess(true)
@@ -39,7 +42,7 @@ export function FeedbackForm() {
       setEmail("")
       setMessage("")
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.")
+      setError(err instanceof Error ? err.message : t.feedback.errorMessage)
     } finally {
       setLoading(false)
     }
@@ -48,20 +51,20 @@ export function FeedbackForm() {
   return (
     <div className="rounded-xl border border-border bg-bg-secondary p-6 mt-10">
       <h3 className="text-lg font-semibold text-text-primary mb-4">
-        Leave a message
+        {t.feedback.heading}
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="fb-name" className="text-sm font-medium text-text-secondary">
-              Name *
+              {t.feedback.nameLabel}
             </label>
             <input
               id="fb-name"
               type="text"
               required
-              placeholder="Your name"
+              placeholder={t.feedback.namePlaceholder}
               value={name}
               onChange={(e) => setName(e.target.value)}
               className={inputClassName}
@@ -70,12 +73,12 @@ export function FeedbackForm() {
 
           <div>
             <label htmlFor="fb-role" className="text-sm font-medium text-text-secondary">
-              Role
+              {t.feedback.roleLabel}
             </label>
             <input
               id="fb-role"
               type="text"
-              placeholder="e.g., Software Engineer"
+              placeholder={t.feedback.rolePlaceholder}
               value={role}
               onChange={(e) => setRole(e.target.value)}
               className={inputClassName}
@@ -85,12 +88,12 @@ export function FeedbackForm() {
 
         <div>
           <label htmlFor="fb-email" className="text-sm font-medium text-text-secondary">
-            Email
+            {t.feedback.emailLabel}
           </label>
           <input
             id="fb-email"
             type="email"
-            placeholder="your@email.com (private, not displayed)"
+            placeholder={t.feedback.emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={inputClassName}
@@ -99,7 +102,7 @@ export function FeedbackForm() {
 
         <div>
           <label htmlFor="fb-message" className="text-sm font-medium text-text-secondary">
-            Message *
+            {t.feedback.messageLabel}
           </label>
           <textarea
             id="fb-message"
@@ -107,7 +110,7 @@ export function FeedbackForm() {
             minLength={10}
             maxLength={1000}
             rows={4}
-            placeholder="Share your thoughts..."
+            placeholder={t.feedback.messagePlaceholder}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className={inputClassName}
@@ -120,12 +123,12 @@ export function FeedbackForm() {
           disabled={loading}
           className="bg-accent text-bg-primary hover:bg-accent-hover rounded-lg px-6 py-3 font-medium transition-colors disabled:opacity-60"
         >
-          {loading ? "Sending..." : "Submit"}
+          {loading ? t.feedback.sending : t.feedback.submit}
         </button>
 
         {success && (
           <p className="text-sm text-green-400">
-            Thanks! Your feedback was submitted for review.
+            {t.feedback.successMessage}
           </p>
         )}
 

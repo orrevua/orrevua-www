@@ -4,6 +4,7 @@ import { useCallback } from "react"
 import { TerminalProvider, useTerminal } from "./terminal-provider"
 import { TerminalOverlay } from "./terminal-overlay"
 import { useKeydown } from "@/lib/hooks/use-keydown"
+import { LocaleProvider } from "@/i18n/context"
 
 function TerminalKeyboardBinder() {
   const { toggle } = useTerminal()
@@ -14,10 +15,12 @@ function TerminalKeyboardBinder() {
 
 export function TerminalWrapper({ children }: { children: React.ReactNode }) {
   return (
-    <TerminalProvider>
-      <TerminalKeyboardBinder />
-      {children}
-      <TerminalOverlay />
-    </TerminalProvider>
+    <LocaleProvider>
+      <TerminalProvider>
+        <TerminalKeyboardBinder />
+        {children}
+        <TerminalOverlay />
+      </TerminalProvider>
+    </LocaleProvider>
   )
 }

@@ -1,25 +1,29 @@
-import { personalInfo } from "@/data/personal"
+"use client"
+
 import { SectionLabel } from "@/components/ui/section-label"
 import { LocationPreview } from "@/components/ui/location-preview"
-
-const snapshot = [
-  { key: "Location", value: personalInfo.location },
-  { key: "Experience", value: personalInfo.experience },
-  { key: "Focus", value: personalInfo.focus },
-  { key: "Education", value: personalInfo.education },
-  { key: "English", value: personalInfo.english },
-  { key: "Status", value: personalInfo.status, isStatus: true },
-]
+import { useTranslation } from "@/i18n/context"
 
 export function About() {
+  const { t } = useTranslation()
+
+  const snapshot = [
+    { key: t.about.snapshotKeys.location, value: t.data.personal.location, isLocation: true },
+    { key: t.about.snapshotKeys.experience, value: t.data.personal.experience },
+    { key: t.about.snapshotKeys.focus, value: t.data.personal.focus },
+    { key: t.about.snapshotKeys.education, value: t.data.personal.education },
+    { key: t.about.snapshotKeys.english, value: t.data.personal.english },
+    { key: t.about.snapshotKeys.status, value: t.data.personal.status, isStatus: true },
+  ]
+
   return (
     <section id="about" className="scroll-mt-20 py-30">
       <div className="mx-auto max-w-5xl px-6">
-        <SectionLabel number="01" label="about" />
+        <SectionLabel number="01" label={t.about.sectionLabel} />
 
         <div className="grid gap-12 lg:grid-cols-5">
           <div className="space-y-4 lg:col-span-3">
-            {personalInfo.aboutParagraphs.map((paragraph, i) => (
+            {t.data.personal.aboutParagraphs.map((paragraph, i) => (
               <p
                 key={i}
                 className="text-base leading-relaxed text-text-secondary"
@@ -42,10 +46,9 @@ export function About() {
                       {item.isStatus && (
                         <span className="mr-1.5 text-success">●</span>
                       )}
-                      {item.key === "Location" ? (
+                      {item.isLocation ? (
                         <LocationPreview
                           address={item.value}
-                          // Use city-name query so Google highlights the city overview
                           embedUrl={
                             "https://maps.google.com/maps?q=Parnamirim,+RN&z=11&output=embed"
                           }
