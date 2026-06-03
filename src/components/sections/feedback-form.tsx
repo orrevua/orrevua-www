@@ -9,7 +9,7 @@ const inputClassName =
 export function FeedbackForm() {
   const [name, setName] = useState("")
   const [role, setRole] = useState("")
-  const [email, setEmail] = useState("")
+  const [company, setCompany] = useState("")
   const [message, setMessage] = useState("")
 
   const [loading, setLoading] = useState(false)
@@ -28,7 +28,7 @@ export function FeedbackForm() {
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, role, email, message }),
+        body: JSON.stringify({ name, role, company, message }),
       })
 
       if (!res.ok) {
@@ -39,7 +39,7 @@ export function FeedbackForm() {
       setSuccess(true)
       setName("")
       setRole("")
-      setEmail("")
+      setCompany("")
       setMessage("")
     } catch (err) {
       setError(err instanceof Error ? err.message : t.feedback.errorMessage)
@@ -50,12 +50,24 @@ export function FeedbackForm() {
 
   return (
     <div className="rounded-xl border border-border bg-bg-secondary p-6 mt-10">
-      <h3 className="text-lg font-semibold text-text-primary mb-4">
+      <h3 className="text-lg font-semibold text-text-primary mb-1">
         {t.feedback.heading}
       </h3>
+      <p className="text-sm italic text-text-tertiary mb-4">
+        {t.feedback.headingSubtitle}
+      </p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <input
+          type="text"
+          name="website"
+          autoComplete="off"
+          tabIndex={-1}
+          aria-hidden="true"
+          className="absolute opacity-0 pointer-events-none h-0 w-0"
+        />
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label htmlFor="fb-name" className="text-sm font-medium text-text-secondary">
               {t.feedback.nameLabel}
@@ -84,20 +96,20 @@ export function FeedbackForm() {
               className={inputClassName}
             />
           </div>
-        </div>
 
-        <div>
-          <label htmlFor="fb-email" className="text-sm font-medium text-text-secondary">
-            {t.feedback.emailLabel}
-          </label>
-          <input
-            id="fb-email"
-            type="email"
-            placeholder={t.feedback.emailPlaceholder}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={inputClassName}
-          />
+          <div>
+            <label htmlFor="fb-company" className="text-sm font-medium text-text-secondary">
+              {t.feedback.companyLabel}
+            </label>
+            <input
+              id="fb-company"
+              type="text"
+              placeholder={t.feedback.companyPlaceholder}
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              className={inputClassName}
+            />
+          </div>
         </div>
 
         <div>

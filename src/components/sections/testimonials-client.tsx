@@ -31,27 +31,34 @@ export function TestimonialsClient({ feedbacks }: TestimonialsClientProps) {
 
         {feedbacks.length > 0 && (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {feedbacks.map((feedback) => (
+            {feedbacks.map((feedback) => {
+              const localizedMessage =
+                locale === "pt"
+                  ? feedback.messagePt ?? feedback.message
+                  : feedback.messageEn ?? feedback.message
+
+              return (
               <div
                 key={feedback.id}
                 className="rounded-xl border border-border bg-bg-secondary p-6"
               >
                 <p className="italic text-text-secondary">
-                  &ldquo;{feedback.message}&rdquo;
+                  &ldquo;{localizedMessage}&rdquo;
                 </p>
                 <div className="mt-4">
                   <span className="font-medium text-text-primary">
                     {feedback.name}
                   </span>
                   <p className="font-mono text-sm text-accent">
-                    {feedback.role}
+                    {[feedback.role, feedback.company].filter(Boolean).join(" - ")}
                   </p>
                   <p className="text-xs text-text-tertiary">
                     {formatDate(feedback.date)}
                   </p>
                 </div>
               </div>
-            ))}
+              )
+            })}
           </div>
         )}
 

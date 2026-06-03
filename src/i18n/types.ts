@@ -58,8 +58,9 @@ export type Translations = {
     namePlaceholder: string
     roleLabel: string
     rolePlaceholder: string
-    emailLabel: string
-    emailPlaceholder: string
+    companyLabel: string
+    companyPlaceholder: string
+    headingSubtitle: string
     messageLabel: string
     messagePlaceholder: string
     submit: string

@@ -88,6 +88,9 @@ export type Feedback = {
   id: string
   name: string
   role: string
+  company: string
   message: string
+  messageEn?: string
+  messagePt?: string
   date: string
 }
