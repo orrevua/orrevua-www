@@ -10,7 +10,7 @@ export function Contact() {
     <section id="contact" className="scroll-mt-20 py-30">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <div className="flex justify-center">
-          <SectionLabel number="05" label="contact" />
+          <SectionLabel number="06" label="contact" />
         </div>
 
         <h2 className="text-4xl font-bold text-text-primary">

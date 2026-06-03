@@ -83,3 +83,11 @@ export type TerminalState = {
   currentInput: string
   cursorPosition: number
 }
+
+export type Feedback = {
+  id: string
+  name: string
+  role: string
+  message: string
+  date: string
+}
