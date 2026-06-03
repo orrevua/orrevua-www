@@ -1,10 +1,19 @@
 import { NextRequest, NextResponse } from "next/server"
 import { octokit, owner, repo, FEEDBACKS_PATH, BASE_BRANCH } from "@/lib/github"
+import { isAdminTokenConfigured, isAuthorizedAdmin } from "@/lib/admin-auth"
 import type { Feedback } from "@/types"
 
 export async function POST(req: NextRequest) {
+  if (!isAdminTokenConfigured()) {
+    console.warn("ADMIN_SECRET_TOKEN is not set.")
+    return NextResponse.json(
+      { error: "Server misconfiguration." },
+      { status: 500 }
+    )
+  }
+
   const authHeader = req.headers.get("Authorization")
-  if (!authHeader || authHeader !== `Bearer ${process.env.ADMIN_SECRET_TOKEN}`) {
+  if (!isAuthorizedAdmin(authHeader)) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
   }
 

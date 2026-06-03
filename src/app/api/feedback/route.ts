@@ -1,21 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import { octokit, owner, repo, FEEDBACKS_PATH, BASE_BRANCH } from "@/lib/github"
+import { checkRateLimit } from "@/lib/rate-limit"
 import type { Feedback } from "@/types"
-
-const rateLimitMap = new Map<string, number>()
-const COOLDOWN_MS = 60_000
-
-function isRateLimited(ip: string): boolean {
-  const lastRequest = rateLimitMap.get(ip)
-  const now = Date.now()
-  if (lastRequest && now - lastRequest < COOLDOWN_MS) return true
-  rateLimitMap.set(ip, now)
-  return false
-}
 
 function sanitize(value: unknown): string {
   if (typeof value !== "string") return ""
   return value.replace(/<[^>]*>/g, "").trim()
+}
+
+function sanitizeForCommit(value: string): string {
+  return value.replace(/[\r\n\t\u0000\u0001]+/g, " ").replace(/\s+/g, " ").trim()
 }
 
 function validate(body: Record<string, unknown>): {
@@ -43,11 +37,19 @@ function validate(body: Record<string, unknown>): {
 
 export async function POST(request: NextRequest) {
   try {
-    const ip = request.headers.get("x-forwarded-for") ?? "unknown"
-    if (isRateLimited(ip)) {
+    const ipHeader = request.headers.get("x-forwarded-for") ?? ""
+    const ip = ipHeader.split(",")[0]?.trim() || "unknown"
+    const limit = await checkRateLimit(ip)
+    if (!limit.allowed) {
       return NextResponse.json(
         { error: "Too many requests. Please wait before submitting again." },
-        { status: 429 }
+        {
+          status: 429,
+          headers:
+            limit.retryAfterMs > 0
+              ? { "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)) }
+              : undefined,
+        }
       )
     }
 
@@ -58,6 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { name, role, email, message } = result.data
+    const safeName = sanitizeForCommit(name)
     const feedbackId = "fb_" + Date.now()
     const newBranchName = "feedback/" + feedbackId
 
@@ -111,7 +114,7 @@ export async function POST(request: NextRequest) {
       owner,
       repo,
       path: FEEDBACKS_PATH,
-      message: `feat: add feedback from ${name} (${feedbackId})`,
+      message: `feat: add feedback from ${safeName} (${feedbackId})`,
       content: encodedContent,
       branch: newBranchName,
       ...(fileSha ? { sha: fileSha } : {}),

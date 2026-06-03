@@ -40,7 +40,8 @@ type TranslationContextValue = {
 const TranslationContext = createContext<TranslationContextValue | null>(null)
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(readStoredLocale)
+  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE)
+  const [hasResolvedLocale, setHasResolvedLocale] = useState(false)
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next)
@@ -51,9 +52,19 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    const stored = readStoredLocale()
+    const timeoutId = window.setTimeout(() => {
+      setLocaleState(stored)
+      setHasResolvedLocale(true)
+    }, 0)
+    return () => window.clearTimeout(timeoutId)
+  }, [])
+
+  useEffect(() => {
+    if (!hasResolvedLocale) return
     localStorage.setItem(STORAGE_KEY, locale)
     document.documentElement.lang = locale
-  }, [locale])
+  }, [locale, hasResolvedLocale])
 
   const t = localeMap[locale]
 
