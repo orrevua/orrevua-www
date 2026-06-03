@@ -117,9 +117,19 @@ export default function AdminPage() {
           Feedback Moderation
         </h1>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4" autoComplete="on">
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            value="admin"
+            readOnly
+            className="hidden"
+          />
           <input
             type="password"
+            name="password"
+            autoComplete="current-password"
             required
             placeholder="Admin token"
             value={adminToken}
