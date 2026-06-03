@@ -1,4 +1,5 @@
 import type { TerminalCommand, TerminalOutput } from "@/types"
+import type { Translations } from "@/i18n/types"
 import { personalInfo } from "@/data/personal"
 import { experiences } from "@/data/experience"
 import { projects } from "@/data/projects"
@@ -21,7 +22,7 @@ function register(cmd: TerminalCommand) {
 register({
   name: "help",
   description: "List all available commands",
-  execute: () => {
+  execute: (_args, t) => {
     const all = getAllCommands()
     const unix = all.filter((c) => !c.name.startsWith("/") && c.name !== "sudo")
     const portfolio = all.filter((c) => c.name.startsWith("/"))
@@ -29,17 +30,42 @@ register({
     const maxUnix = Math.max(...unix.map((c) => c.name.length))
     const maxPortfolio = Math.max(...portfolio.map((c) => c.name.length))
 
+    const cmdDescs = t.terminal.commands
+    const descMap: Record<string, string> = {
+      help: cmdDescs.help,
+      clear: cmdDescs.clear,
+      exit: cmdDescs.exit,
+      ls: cmdDescs.ls,
+      whoami: cmdDescs.whoami,
+      history: cmdDescs.history,
+      sudo: cmdDescs.sudo,
+      "sudo su": cmdDescs.sudoSu,
+      rm: cmdDescs.rm,
+      vim: cmdDescs.vim,
+      "/about": cmdDescs.about,
+      "/experience": cmdDescs.experience,
+      "/projects": cmdDescs.projects,
+      "/skills": cmdDescs.skills,
+      "/contact": cmdDescs.contact,
+      "/github": cmdDescs.github,
+      "/linkedin": cmdDescs.linkedin,
+      "/resume": cmdDescs.resume,
+      "/stack": cmdDescs.stack,
+      "/theme": cmdDescs.theme,
+      "/motd": cmdDescs.motd,
+    }
+
     const unixLines = unix.map((cmd) =>
-      line(`  ${cmd.name.padEnd(maxUnix + 2)} ${cmd.description}`)
+      line(`  ${cmd.name.padEnd(maxUnix + 2)} ${descMap[cmd.name] ?? cmd.description}`)
     )
     const portfolioLines = portfolio.map((cmd) =>
-      line(`  ${cmd.name.padEnd(maxPortfolio + 2)} ${cmd.description}`)
+      line(`  ${cmd.name.padEnd(maxPortfolio + 2)} ${descMap[cmd.name] ?? cmd.description}`)
     )
 
     return combine(
-      header("Commands"),
-      output(blank(), line("Shell", "accent"), ...unixLines, blank()),
-      output(line("Portfolio", "accent"), ...portfolioLines, blank())
+      header(t.terminal.output.helpHeader),
+      output(blank(), line(t.terminal.output.helpShell, "accent"), ...unixLines, blank()),
+      output(line(t.terminal.output.helpPortfolio, "accent"), ...portfolioLines, blank())
     )
   },
 })
@@ -97,9 +123,9 @@ register({
 register({
   name: "whoami",
   description: "Who are you?",
-  execute: () => {
+  execute: (_args, t) => {
     return output(
-      line("visitor — curious enough to open a terminal. I like you.", "success")
+      line(t.terminal.output.whoamiResponse, "success")
     )
   },
 })
@@ -107,48 +133,36 @@ register({
 register({
   name: "history",
   description: "Show command history",
-  execute: () => {
-    return output(line("No history available.", "dimmed"))
+  execute: (_args, t) => {
+    return output(line(t.terminal.output.noHistory, "dimmed"))
   },
 })
 
 register({
   name: "sudo",
   description: "Superuser command",
-  execute: (args) => {
+  execute: (args, t) => {
     if (args.length > 0 && args[0].toLowerCase() === "su") {
+      const box = t.terminal.output.sudoBox
       return output(
-        line("┌─────────────────────────────────────────┐", "success"),
-        line("│  ROOT AUTHENTICATION SUCCEEDED          │", "success"),
-        line("│                                         │", "success"),
-        line("│  Hiring sequence initiated...             │", "success"),
-        line("│  Sending offer letter...                  │", "success"),
-        line("│  ████████████████████████████░░  93%    │", "success"),
-        line("│                                         │", "success"),
-        line("│  Just kidding. But let's talk!          │", "success"),
-        line("│  → felipevictor67@gmail.com            │", "accent"),
-        line("└─────────────────────────────────────────┘", "success")
+        ...box.slice(0, -1).map((l) => line(l, "success")),
+        line(box[box.length - 2] ?? "", "accent"),
+        line(box[box.length - 1], "success")
       )
     }
-    return output(line("Permission denied.", "error"))
+    return output(line(t.terminal.output.permissionDenied, "error"))
   },
 })
 
 register({
   name: "sudo su",
   description: "Switch to superuser",
-  execute: () => {
+  execute: (_args, t) => {
+    const box = t.terminal.output.sudoBox
     return output(
-      line("┌─────────────────────────────────────────┐", "success"),
-      line("│  ROOT AUTHENTICATION SUCCEEDED          │", "success"),
-      line("│                                         │", "success"),
-      line("│  Hiring sequence initiated...             │", "success"),
-      line("│  Sending offer letter...                  │", "success"),
-      line("│  ████████████████████████████░░  93%    │", "success"),
-      line("│                                         │", "success"),
-      line("│  Just kidding. But let's talk!          │", "success"),
-      line("│  → felipevictor67@gmail.com            │", "accent"),
-      line("└─────────────────────────────────────────┘", "success")
+      ...box.slice(0, -1).map((l) => line(l, "success")),
+      line(box[box.length - 2] ?? "", "accent"),
+      line(box[box.length - 1], "success")
     )
   },
 })
@@ -156,42 +170,38 @@ register({
 register({
   name: "rm",
   description: "Remove files",
-  execute: () => {
-    return output(line("Nice try. This portfolio is immutable.", "warning"))
+  execute: (_args, t) => {
+    return output(line(t.terminal.output.rmResponse, "warning"))
   },
 })
 
 register({
   name: "vim",
   description: "Open vim editor",
-  execute: () => {
-    return output(
-      line(
-        "You're stuck now. Just kidding — there's no vim here. Type exit to leave.",
-        "warning"
-      )
-    )
+  execute: (_args, t) => {
+    return output(line(t.terminal.output.vimResponse, "warning"))
   },
 })
 
 register({
   name: "neofetch",
   description: "",
-  execute: () => {
+  execute: (_args, t) => {
+    const labels = t.terminal.output.neofetchLabels
     return output(
       blank(),
       line("        ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄        visitor@orrevua", "accent"),
       line("      ▄█████████████████▄      ─────────────────────"),
-      line("    ▄███████████████████████    OS:       Human/Developer 6.0+"),
-      line("   ████████████████████████▀   Host:     Parnamirim, RN, Brazil"),
-      line("  ▐████████████████████████    Kernel:   B.Sc. IT — UFRN"),
-      line("  ████████████████████████▌    Shell:    Python / TypeScript"),
-      line("  ████████████████████████▌    WM:       Clean Architecture"),
-      line("  ▐███████████████████████▌    Terminal: This one, obviously"),
-      line("   ▀██████████████████████     CPU:      Backend × 6+ cores"),
-      line("    ▀████████████████████▀     Memory:   FastAPI / Django / NestJS"),
-      line("      ▀████████████████▀       Uptime:   Since 2015"),
-      line("        ▀▀▀▀▀▀▀▀▀▀▀▀▀▀        Packages: 28 repos (github)"),
+      line(`    ▄███████████████████████    ${labels.os}`),
+      line(`   ████████████████████████▀   ${labels.host}`),
+      line(`  ▐████████████████████████    ${labels.kernel}`),
+      line(`  ████████████████████████▌    ${labels.shell}`),
+      line(`  ████████████████████████▌    ${labels.wm}`),
+      line(`  ▐███████████████████████▌    ${labels.terminal}`),
+      line(`   ▀██████████████████████     ${labels.cpu}`),
+      line(`    ▀████████████████████▀     ${labels.memory}`),
+      line(`      ▀████████████████▀       ${labels.uptime}`),
+      line(`        ▀▀▀▀▀▀▀▀▀▀▀▀▀▀        ${labels.packages}`),
       blank(),
       line("  █  █  █  █  █  █  █  █", "accent"),
       blank(),
@@ -202,38 +212,39 @@ register({
 register({
   name: "agent",
   description: "",
-  execute: () => {
+  execute: (_args, t) => {
+    const a = t.terminal.output.agentLines
     const result = output(
       blank(),
-      line("⚡ Initializing agentic workflow...", "accent"),
+      line(a.initializing, "accent"),
       blank(),
-      line("┌─ Architect Agent ────────────────────────────────┐"),
-      line("│  ▸ Analyzing visitor profile...                  │", "dimmed"),
-      line("│  ▸ Reading behavioral patterns...                │", "dimmed"),
-      line("│  ▸ Drafting personalization spec...              │", "dimmed"),
-      line("│  ✓ Spec ready. Delegating to Implementer.       │", "success"),
+      line(a.architectAgent),
+      line(a.analyzingVisitor, "dimmed"),
+      line(a.readingPatterns, "dimmed"),
+      line(a.draftingSpec, "dimmed"),
+      line(a.specReady, "success"),
       line("└──────────────────────────────────────────────────┘"),
       blank(),
-      line("┌─ Implementer Agent ──────────────────────────────┐"),
-      line("│  ▸ Receiving spec from Architect...              │", "dimmed"),
-      line("│  ▸ Executing recommendation unit...              │", "dimmed"),
-      line("│  ▸ Running quality checks...                     │", "dimmed"),
-      line("│  ✓ Implementation complete.                      │", "success"),
+      line(a.implementerAgent),
+      line(a.receivingSpec, "dimmed"),
+      line(a.executingUnit, "dimmed"),
+      line(a.runningChecks, "dimmed"),
+      line(a.implementationComplete, "success"),
       line("└──────────────────────────────────────────────────┘"),
       blank(),
-      line("📋 Agent Report:", "accent"),
-      line("   You opened a terminal on a portfolio site."),
-      line("   That tells me you're the kind of engineer who"),
-      line("   reads the source, not just the UI."),
+      line(a.reportTitle, "accent"),
+      line(a.reportLine1),
+      line(a.reportLine2),
+      line(a.reportLine3),
       blank(),
-      line("   This portfolio was built using the same"),
-      line("   Architect → Implementer agentic workflow"),
-      line("   Felipe uses to ship production code with Claude."),
+      line(a.reportLine4),
+      line(a.reportLine5),
+      line(a.reportLine6),
       blank(),
       link("   → See how: github.com/orrevua/agentic-skills", "https://github.com/orrevua/agentic-skills"),
       blank(),
-      line("   Want to work with someone who automates the", "dimmed"),
-      line("   boring stuff and architects the hard stuff?", "dimmed"),
+      line(a.reportCta1, "dimmed"),
+      line(a.reportCta2, "dimmed"),
       link("   → felipevictor67@gmail.com", "mailto:felipevictor67@gmail.com"),
       blank(),
     )
@@ -246,29 +257,31 @@ register({
 register({
   name: "/about",
   description: "About Felipe Franca",
-  execute: () => {
+  execute: (_args, t) => {
     const info = personalInfo
+    const d = t.data.personal
+    const labels = t.terminal.output.aboutLabels
     const sections: TerminalOutput[] = [
       header(info.name),
       output(
-        line(info.title, "accent"),
-        line(info.tagline, "dimmed"),
+        line(d.title, "accent"),
+        line(d.tagline, "dimmed"),
         blank()
       ),
     ]
 
-    for (const paragraph of info.aboutParagraphs) {
+    for (const paragraph of d.aboutParagraphs) {
       sections.push(output(line(paragraph), blank()))
     }
 
     sections.push(
       output(
-        line("Location      " + info.location, "dimmed"),
-        line("Experience    " + info.experience, "dimmed"),
-        line("Focus         " + info.focus, "dimmed"),
-        line("Education     " + info.education, "dimmed"),
-        line("English       " + info.english, "dimmed"),
-        line("Status        " + info.status, "dimmed"),
+        line(`${labels.location.padEnd(14)}${d.location}`, "dimmed"),
+        line(`${labels.experience.padEnd(14)}${d.experience}`, "dimmed"),
+        line(`${labels.focus.padEnd(14)}${d.focus}`, "dimmed"),
+        line(`${labels.education.padEnd(14)}${d.education}`, "dimmed"),
+        line(`${labels.english.padEnd(14)}${d.english}`, "dimmed"),
+        line(`${labels.status.padEnd(14)}${d.status}`, "dimmed"),
       )
     )
 
@@ -280,27 +293,28 @@ register({
   name: "/experience",
   description: "Professional experience",
   usage: "/experience [--all]",
-  execute: (args) => {
+  execute: (args, t) => {
     const showAll = args.includes("--all")
     const entries = showAll
       ? experiences
       : experiences.filter((e) => !e.isPreCareer)
 
     const lines = entries.flatMap((entry) => {
+      const translated = t.data.experiences[entry.id]
       const dateRange = entry.endDate
         ? `${entry.startDate} — ${entry.endDate}`
-        : `${entry.startDate} — Present`
-      const noteStr = entry.note ? ` (${entry.note})` : ""
+        : `${entry.startDate} — ${t.experience.present}`
+      const noteStr = translated?.note ? ` (${translated.note})` : entry.note ? ` (${entry.note})` : ""
       return [
-        line(`▸ ${entry.company.padEnd(24)} ${entry.role}${noteStr}`, "accent"),
+        line(`▸ ${entry.company.padEnd(24)} ${translated?.role ?? entry.role}${noteStr}`, "accent"),
         line(`  ${dateRange}`, "dimmed"),
-        line(`  ${entry.description}`),
+        line(`  ${translated?.description ?? entry.description}`),
         blank(),
       ]
     })
 
     return combine(
-      header(showAll ? "Experience (All)" : "Experience"),
+      header(showAll ? t.terminal.output.experienceAllHeader : t.terminal.output.experienceHeader),
       output(...lines)
     )
   },
@@ -310,7 +324,7 @@ register({
   name: "/projects",
   description: "View projects",
   usage: "/projects [name]",
-  execute: (args) => {
+  execute: (args, t) => {
     if (args.length > 0) {
       const query = args.join(" ").toLowerCase()
       const project = projects.find(
@@ -321,15 +335,16 @@ register({
       )
 
       if (!project) {
-        return output(line(`Project not found: ${args.join(" ")}`, "error"))
+        return output(line(t.terminal.output.projectNotFound.replace("{name}", args.join(" ")), "error"))
       }
 
+      const translated = t.data.projects[project.id]
       const lines = [
-        line(project.displayName, "accent"),
+        line(translated?.displayName ?? project.displayName, "accent"),
         blank(),
-        line(project.longDescription),
+        line(translated?.longDescription ?? project.longDescription),
         blank(),
-        line(`Technologies: ${project.technologies.join(", ")}`, "dimmed"),
+        line(`${t.terminal.output.technologies} ${project.technologies.join(", ")}`, "dimmed"),
         link(`GitHub: ${project.githubUrl}`, project.githubUrl),
       ]
 
@@ -345,10 +360,11 @@ register({
     const sorted = [...featured, ...other]
 
     const lines = sorted.flatMap((project) => {
+      const translated = t.data.projects[project.id]
       const marker = project.isFeatured ? "★" : " "
       const result = [
-        line(`${marker} ${project.displayName}`, "accent"),
-        line(`  ${project.description}`),
+        line(`${marker} ${translated?.displayName ?? project.displayName}`, "accent"),
+        line(`  ${translated?.description ?? project.description}`),
         line(`  ${project.technologies.join(" · ")}`, "dimmed"),
       ]
 
@@ -363,28 +379,41 @@ register({
       return result
     })
 
-    return combine(header("Projects"), output(...lines))
+    return combine(header(t.terminal.output.projectsHeader), output(...lines))
   },
 })
 
 register({
   name: "/skills",
   description: "Technical skills",
-  execute: () => {
-    const lines = skillCategories.flatMap((category) => [
-      line(category.name, "accent"),
-      line(`  ${category.skills.join(", ")}`),
-      blank(),
-    ])
+  execute: (_args, t) => {
+    const categoryKeyMap: Record<string, keyof Translations["skills"]["categories"]> = {
+      Languages: "languages",
+      Backend: "backend",
+      Frontend: "frontend",
+      Databases: "databases",
+      Infrastructure: "infrastructure",
+      Practices: "practices",
+    }
 
-    return combine(header("Skills"), output(...lines))
+    const lines = skillCategories.flatMap((category) => {
+      const key = categoryKeyMap[category.name]
+      const name = key ? t.skills.categories[key] : category.name
+      return [
+        line(name, "accent"),
+        line(`  ${category.skills.join(", ")}`),
+        blank(),
+      ]
+    })
+
+    return combine(header(t.terminal.output.skillsHeader), output(...lines))
   },
 })
 
 register({
   name: "/contact",
   description: "Contact information",
-  execute: () => {
+  execute: (_args, t) => {
     const info = personalInfo
     const github = info.socials.find((s) => s.platform === "github")
     const linkedin = info.socials.find((s) => s.platform === "linkedin")
@@ -400,18 +429,18 @@ register({
       lines.push(link(`LinkedIn: ${linkedin.url}`, linkedin.url))
     }
 
-    return combine(header("Contact"), output(...lines))
+    return combine(header(t.terminal.output.contactHeader), output(...lines))
   },
 })
 
 register({
   name: "/github",
   description: "Open GitHub profile",
-  execute: () => {
+  execute: (_args, t) => {
     const github = personalInfo.socials.find((s) => s.platform === "github")
     const url = github?.url ?? "https://github.com/orrevua"
     return output(
-      line("Opening GitHub...", "success"),
+      line(t.terminal.output.githubOpening, "success"),
       link(url, url)
     )
   },
@@ -420,13 +449,13 @@ register({
 register({
   name: "/linkedin",
   description: "Open LinkedIn profile",
-  execute: () => {
+  execute: (_args, t) => {
     const linkedin = personalInfo.socials.find(
       (s) => s.platform === "linkedin"
     )
     const url = linkedin?.url ?? "https://linkedin.com/in/flpfranca"
     return output(
-      line("Opening LinkedIn...", "success"),
+      line(t.terminal.output.linkedinOpening, "success"),
       link(url, url)
     )
   },
@@ -435,19 +464,19 @@ register({
 register({
   name: "/resume",
   description: "Download resume",
-  execute: () => {
-    return output(line("Downloading resume...", "success"))
+  execute: (_args, t) => {
+    return output(line(t.terminal.output.resumeDownloading, "success"))
   },
 })
 
 register({
   name: "/stack",
   description: "Portfolio tech stack",
-  execute: () => {
+  execute: (_args, t) => {
     return combine(
-      header("Tech Stack"),
+      header(t.terminal.output.stackHeader),
       output(
-        line("This portfolio is built with:"),
+        line(t.terminal.output.stackIntro),
         blank(),
         line("  Next.js 16", "accent"),
         line("  TypeScript", "accent"),
@@ -462,7 +491,7 @@ register({
 register({
   name: "/theme",
   description: "Show color palette",
-  execute: () => {
+  execute: (_args, t) => {
     const colors: [string, string][] = [
       ["bg-primary", "#0A0A0B"],
       ["bg-secondary", "#111113"],
@@ -481,23 +510,16 @@ register({
       line(`  █████ ${hex}  ${name}`)
     )
 
-    return combine(header("Color Palette"), output(...lines))
+    return combine(header(t.terminal.output.themeHeader), output(...lines))
   },
 })
-
-const motdMessages = [
-  "\"Clean code is not written by following a set of rules.\" — Robert C. Martin",
-  "\"Any fool can write code that a computer can understand. Good programmers write code that humans can understand.\" — Martin Fowler",
-  "Felipe once built a relational DBMS from scratch in C++. For a university assignment.",
-  "Fun fact: 'orrevua' is 'auverro' backwards. Which is also not a word. But it sounds cool.",
-]
 
 register({
   name: "/motd",
   description: "Message of the day",
-  execute: () => {
+  execute: (_args, t) => {
     const dayIndex = Math.floor(Date.now() / 86400000)
-    const msg = motdMessages[dayIndex % motdMessages.length]
+    const msg = t.terminal.motd[dayIndex % t.terminal.motd.length]
     return output(blank(), line(msg, "accent"), blank())
   },
 })
@@ -510,15 +532,15 @@ export function setHistoryProvider(provider: () => string[]) {
   register({
     name: "history",
     description: "Show command history",
-    execute: () => {
+    execute: (_args, t) => {
       const hist = historyProvider ? historyProvider() : []
       if (hist.length === 0) {
-        return output(line("No commands in history.", "dimmed"))
+        return output(line(t.terminal.output.noCommandsHistory, "dimmed"))
       }
       const lines = hist.map((cmd, i) =>
         line(`  ${String(i + 1).padStart(3)}  ${cmd}`, "dimmed")
       )
-      return combine(header("Command History"), output(...lines))
+      return combine(header(t.terminal.output.commandHistoryHeader), output(...lines))
     },
   })
 }

@@ -7,10 +7,12 @@ import { motion } from "framer-motion"
 import { personalInfo } from "@/data/personal"
 import { useTerminal } from "@/components/terminal/terminal-provider"
 import { ClaudeMascot } from "@/components/ui/claude-mascot"
+import { useTranslation } from "@/i18n/context"
 
 export function Hero() {
   const [imageError, setImageError] = useState(false)
   const { toggle } = useTerminal()
+  const { t } = useTranslation()
 
   return (
     <>
@@ -31,7 +33,7 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {personalInfo.title}
+          {t.data.personal.title}
           <span className="animate-blink ml-0.5 text-accent">▎</span>
         </motion.p>
 
@@ -41,7 +43,7 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          {personalInfo.tagline}
+          {t.data.personal.tagline}
         </motion.p>
 
         <motion.div
@@ -54,7 +56,7 @@ export function Hero() {
             href="#projects"
             className="rounded-lg bg-accent px-6 py-3 font-medium text-bg-primary transition-colors hover:bg-accent-hover"
           >
-            View my work
+            {t.hero.viewMyWork}
           </a>
           <button
             onClick={toggle}

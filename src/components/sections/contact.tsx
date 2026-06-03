@@ -1,8 +1,12 @@
+"use client"
+
 import { personalInfo } from "@/data/personal"
 import { SectionLabel } from "@/components/ui/section-label"
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons"
+import { useTranslation } from "@/i18n/context"
 
 export function Contact() {
+  const { t } = useTranslation()
   const github = personalInfo.socials.find((s) => s.platform === "github")
   const linkedin = personalInfo.socials.find((s) => s.platform === "linkedin")
 
@@ -10,16 +14,15 @@ export function Contact() {
     <section id="contact" className="scroll-mt-20 py-30">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <div className="flex justify-center">
-          <SectionLabel number="06" label="contact" />
+          <SectionLabel number="06" label={t.contact.sectionLabel} />
         </div>
 
         <h2 className="text-4xl font-bold text-text-primary">
-          Let&apos;s connect
+          {t.contact.heading}
         </h2>
 
         <p className="mx-auto mt-4 max-w-md text-lg text-text-secondary">
-          Open to conversations about engineering, architecture, or
-          opportunities.
+          {t.contact.description}
         </p>
 
         <a
@@ -58,7 +61,7 @@ export function Contact() {
           href="/Felipe França - Resume.pdf"
           className="mt-6 inline-block font-mono text-sm text-text-tertiary transition-colors hover:text-text-secondary"
         >
-          Download Resume &darr;
+          {t.contact.downloadResume}
         </a>
       </div>
     </section>

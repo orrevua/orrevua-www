@@ -1,6 +1,7 @@
 "use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
+import { useTranslation } from "@/i18n/context"
 
 export function LocationPreview({
   address,
@@ -14,6 +15,7 @@ export function LocationPreview({
   const [visible, setVisible] = useState(false)
   const showTimer = useRef<number | null>(null)
   const hideTimer = useRef<number | null>(null)
+  const { t } = useTranslation()
 
   const onEnter = useCallback(() => {
     if (hideTimer.current) {
@@ -71,7 +73,7 @@ export function LocationPreview({
             rel="noopener noreferrer"
             className="block w-full bg-bg-secondary px-2 py-1 text-center text-xs text-text-tertiary hover:text-accent"
           >
-            Open in Google Maps
+            {t.locationPreview.openInMaps}
           </a>
         </div>
       )}
