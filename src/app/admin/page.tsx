@@ -290,10 +290,14 @@ export default function AdminPage() {
                     onClick={() =>
                       handleModerate(fb.prNumber, fb.branchName, "revert")
                     }
-                    disabled={processingId !== null}
-                    className="rounded-lg border border-error bg-transparent px-4 py-2 text-sm font-medium text-error disabled:opacity-60"
+                    disabled={processingId !== null || Boolean(fb.reverted)}
+                    className={`rounded-lg border border-error bg-transparent px-4 py-2 text-sm font-medium disabled:opacity-60 ${
+                      fb.reverted ? "text-text-tertiary border-border" : "text-error"
+                    }`}
                   >
-                    {processingId === fb.prNumber
+                    {fb.reverted
+                      ? "Reverted"
+                      : processingId === fb.prNumber
                       ? "Reverting..."
                       : "Revert"}
                   </button>

@@ -26,24 +26,50 @@ export async function GET(req: NextRequest) {
       per_page: 50,
     })
 
+    let feedbackIdsInFile: string[] = []
+    if (state === "closed") {
+      try {
+        const { data: fileData } = await octokit.repos.getContent({
+          owner,
+          repo,
+          path: "src/data/feedbacks.json",
+          ref: "main",
+        })
+
+        if (!Array.isArray(fileData) && fileData.type === "file") {
+          const content = Buffer.from(fileData.content, "base64").toString("utf-8")
+          const feedbacks = JSON.parse(content)
+          feedbackIdsInFile = feedbacks.map((f: any) => f.id)
+        }
+      } catch (err) {
+        // if file not found or other error, leave feedbackIdsInFile empty
+      }
+    }
+
     const feedbackPRs = pulls
       .filter((pr) => {
         if (!pr.head.ref.startsWith("feedback/")) return false
         if (state === "closed") return pr.merged_at !== null
         return true
       })
-      .map((pr) => ({
-        prNumber: pr.number,
-        title: pr.title,
-        branchName: pr.head.ref,
-        feedbackId: pr.head.ref.replace("feedback/", ""),
-        htmlUrl: pr.html_url,
-        data: {
-          name: pr.title.replace("💬 New feedback from ", ""),
-          message: pr.body || "",
-          date: pr.merged_at ?? pr.created_at,
-        },
-      }))
+      .map((pr) => {
+        const fid = pr.head.ref.replace("feedback/", "")
+        const reverted = state === "closed" ? !feedbackIdsInFile.includes(fid) : false
+
+        return {
+          prNumber: pr.number,
+          title: pr.title,
+          branchName: pr.head.ref,
+          feedbackId: fid,
+          htmlUrl: pr.html_url,
+          reverted,
+          data: {
+            name: pr.title.replace("💬 New feedback from ", ""),
+            message: pr.body || "",
+            date: pr.merged_at ?? pr.created_at,
+          },
+        }
+      })
 
     return NextResponse.json(feedbackPRs, { status: 200 })
   } catch (error) {
