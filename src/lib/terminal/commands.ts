@@ -462,6 +462,17 @@ register({
 })
 
 register({
+  name: "/admin",
+  description: "Open admin panel",
+  execute: (_args, t) => {
+    if (typeof window !== "undefined") {
+      window.open("/admin", "_blank")
+    }
+    return output(line("Opening admin panel...", "success"), link("/admin", "/admin"))
+  },
+})
+
+register({
   name: "/resume",
   description: "Download resume",
   execute: (_args, t) => {
