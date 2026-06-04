@@ -1,6 +1,8 @@
 import { detect } from "tinyld"
 
-const MYMEMORY_API = "https://api.mymemory.translated.net/get"
+const MYMEMORY_API =
+  process.env.MYMEMORY_API_URL ?? "https://api.mymemory.translated.net/get"
+const MYMEMORY_EMAIL = process.env.MYMEMORY_EMAIL
 
 type TranslationResult = {
   messageEn: string
@@ -8,6 +10,7 @@ type TranslationResult = {
 }
 
 const MAX_QUERY_LENGTH = 480
+const FETCH_TIMEOUT_MS = 5000
 
 async function translateChunk(
   text: string,
@@ -17,8 +20,11 @@ async function translateChunk(
   const url = new URL(MYMEMORY_API)
   url.searchParams.set("q", text)
   url.searchParams.set("langpair", `${from}|${to}`)
+  if (MYMEMORY_EMAIL) url.searchParams.set("de", MYMEMORY_EMAIL)
 
-  const res = await fetch(url.toString())
+  const res = await fetch(url.toString(), {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  })
   if (!res.ok) return text
 
   const data = await res.json()

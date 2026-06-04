@@ -17,7 +17,7 @@ const NAV_IDS = [
 
 type NavId = (typeof NAV_IDS)[number]
 
-const SECTION_IDS = NAV_IDS.map((id) => id)
+const SECTION_IDS: string[] = [...NAV_IDS]
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)

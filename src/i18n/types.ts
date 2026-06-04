@@ -167,6 +167,7 @@ export type Translations = {
       contactHeader: string
       githubOpening: string
       linkedinOpening: string
+      adminOpening: string
       resumeDownloading: string
       stackHeader: string
       stackIntro: string

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import { octokit, owner, repo, FEEDBACKS_PATH } from "@/lib/github"
+import { octokit, owner, repo, FEEDBACKS_PATH, BASE_BRANCH } from "@/lib/github"
 import { isAdminTokenConfigured, isAuthorizedAdmin } from "@/lib/admin-auth"
 import type { Feedback } from "@/types"
 
@@ -33,8 +33,8 @@ export async function GET(req: NextRequest) {
         const { data: fileData } = await octokit.repos.getContent({
           owner,
           repo,
-          path: "src/data/feedbacks.json",
-          ref: "main",
+          path: FEEDBACKS_PATH,
+          ref: BASE_BRANCH,
         })
 
         if (!Array.isArray(fileData) && fileData.type === "file") {
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
 
         let feedbackData: Feedback | null = null
         try {
-          const ref = state === "closed" ? "main" : pr.head.ref
+          const ref = state === "closed" ? BASE_BRANCH : pr.head.ref
           const { data: fileData } = await octokit.repos.getContent({
             owner,
             repo,

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, type FormEvent } from "react"
+import { useState, useRef, type FormEvent } from "react"
 import { useTranslation } from "@/i18n/context"
 
 const inputClassName =
@@ -11,6 +11,8 @@ export function FeedbackForm() {
   const [role, setRole] = useState("")
   const [company, setCompany] = useState("")
   const [message, setMessage] = useState("")
+
+  const honeypotRef = useRef<HTMLInputElement>(null)
 
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -28,7 +30,7 @@ export function FeedbackForm() {
       const res = await fetch("/api/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, role, company, message }),
+        body: JSON.stringify({ name, role, company, message, website: honeypotRef.current?.value ?? "" }),
       })
 
       if (!res.ok) {
@@ -59,6 +61,7 @@ export function FeedbackForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
+          ref={honeypotRef}
           type="text"
           name="website"
           autoComplete="off"

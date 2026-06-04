@@ -1,3 +1,5 @@
+// In-memory rate limiter — resets on serverless cold starts (Vercel).
+// Provides best-effort protection; upgrade to Upstash Redis for persistent limits.
 const COOLDOWN_MS = 60_000
 const memoryMap = new Map<string, number>()
 
