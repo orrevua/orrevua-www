@@ -26,9 +26,16 @@ export function Projects() {
                 key={project.id}
                 className="rounded-xl border border-border bg-bg-secondary p-6 transition hover:scale-[1.02] hover:border-accent/50"
               >
-                <h3 className="text-xl font-semibold text-text-primary">
-                  {translated?.displayName ?? project.displayName}
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-xl font-semibold text-text-primary">
+                    {translated?.displayName ?? project.displayName}
+                  </h3>
+                  {project.badge === "study" && (
+                    <span className="rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+                      study
+                    </span>
+                  )}
+                </div>
                 <p className="mt-2 text-sm text-text-secondary">
                   {translated?.description ?? project.description}
                 </p>
@@ -79,19 +86,37 @@ export function Projects() {
                     <span className="font-medium text-text-primary">
                       {translated?.displayName ?? project.displayName}
                     </span>
+                    {project.badge === "study" && (
+                      <span className="ml-2 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
+                        study
+                      </span>
+                    )}
                     <span className="ml-3 text-sm text-text-secondary">
                       {translated?.description ?? project.description}
                     </span>
                   </div>
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 text-text-tertiary transition-colors hover:text-accent"
-                    aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
-                  >
-                    <GitHubIcon size={16} />
-                  </a>
+                  <div className="flex flex-shrink-0 items-center gap-2">
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text-tertiary transition-colors hover:text-accent"
+                      aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
+                    >
+                      <GitHubIcon size={16} />
+                    </a>
+                    {project.liveUrl && (
+                      <a
+                        href={project.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-text-tertiary transition-colors hover:text-accent"
+                        aria-label={`${translated?.displayName ?? project.displayName} live site`}
+                      >
+                        <ExternalLink size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               )
             })}
