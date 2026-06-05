@@ -37,8 +37,8 @@ export const projects: Project[] = [
       "A mock banking application simulating Brazilian PIX transactions. Features user registration, PIX key management, deposits, transfers, transaction history, and an analytics dashboard with charts. Includes validation against duplicate PIX keys and self-transfers.",
     technologies: ["React", "TypeScript", "Vite", "Chart.js"],
     githubUrl: "https://github.com/orrevua/transferBank",
-    liveUrl: "https://transfer-bank.vercel.app",
     isFeatured: true,
+    badge: "study",
   },
   {
     id: "sgbd-imd",
@@ -51,6 +51,7 @@ export const projects: Project[] = [
     technologies: ["C++"],
     githubUrl: "https://github.com/orrevua/SGBD-IMD",
     isFeatured: false,
+    badge: "study",
   },
   {
     id: "podcastr",
@@ -62,6 +63,7 @@ export const projects: Project[] = [
     technologies: ["TypeScript", "Next.js", "React"],
     githubUrl: "https://github.com/orrevua/podcastr",
     isFeatured: false,
+    badge: "study",
   },
   {
     id: "expense-viewer",
@@ -72,6 +74,7 @@ export const projects: Project[] = [
       "A JavaScript application for tracking and visualizing personal expenses.",
     technologies: ["JavaScript"],
     githubUrl: "https://github.com/orrevua/expense_viewer",
+    liveUrl: "https://expense-viewer-nu.vercel.app/",
     isFeatured: false,
   },
 ]

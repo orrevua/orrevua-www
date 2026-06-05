@@ -42,6 +42,7 @@ export type Project = {
   githubUrl: string
   liveUrl?: string
   isFeatured: boolean
+  badge?: "study"
 }
 
 export type SkillCategory = {
