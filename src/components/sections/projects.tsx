@@ -1,13 +1,15 @@
 "use client"
 
+import Image from "next/image"
 import { ExternalLink } from "lucide-react"
 import { GitHubIcon } from "@/components/ui/icons"
 import { projects } from "@/data/projects"
 import { SectionLabel } from "@/components/ui/section-label"
 import { TechTag } from "@/components/ui/tech-tag"
 import { useTranslation } from "@/i18n/context"
+import type { OgPreviews } from "@/lib/og"
 
-export function Projects() {
+export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
   const { t } = useTranslation()
 
   const featured = projects.filter((p) => p.isFeatured)
@@ -26,6 +28,18 @@ export function Projects() {
                 key={project.id}
                 className="rounded-xl border border-border bg-bg-secondary p-6 transition hover:scale-[1.02] hover:border-accent/50"
               >
+                {ogPreviews[project.id] && (
+                  <div className="mb-4 overflow-hidden rounded-lg border border-border">
+                    <Image
+                      src={ogPreviews[project.id]}
+                      alt={`${translated?.displayName ?? project.displayName} preview`}
+                      width={1200}
+                      height={630}
+                      className="h-auto w-full object-cover"
+                      unoptimized
+                    />
+                  </div>
+                )}
                 <div className="flex items-center gap-2">
                   <h3 className="text-xl font-semibold text-text-primary">
                     {translated?.displayName ?? project.displayName}
