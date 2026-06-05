@@ -72,7 +72,7 @@ export const projects: Project[] = [
     description: "Expense tracking application.",
     longDescription:
       "A JavaScript application for tracking and visualizing personal expenses.",
-    technologies: ["JavaScript"],
+    technologies: ["Next.js", "React", "Supabase", "Tailwind CSS"],
     githubUrl: "https://github.com/orrevua/expense_viewer",
     liveUrl: "https://expense-viewer-nu.vercel.app/",
     isFeatured: true,
