@@ -76,6 +76,7 @@ export const translations: Translations = {
   mascot: {
     hint: "Psst... try typing",
     hintCommand: "agent",
+    hintLocation: "in the terminal",
     hintOpen: "Press Ctrl+` to open",
   },
   locationPreview: {
@@ -110,6 +111,7 @@ export const translations: Translations = {
       resume: "Download resume",
       stack: "Portfolio tech stack",
       theme: "Show color palette",
+      themes: "List available themes",
       motd: "Message of the day",
     },
     output: {
@@ -195,6 +197,12 @@ export const translations: Translations = {
       stackHeader: "Tech Stack",
       stackIntro: "This portfolio is built with:",
       themeHeader: "Color Palette",
+      themesHeader: "Available Themes",
+      themeApplied: "Theme applied: {name}",
+      themeNotFound: "Theme not found: \"{name}\". Run /themes to see available options.",
+      themeReset: "Theme reset to default (Midnight).",
+      themeUsage: "Usage: /theme apply <name> | /theme reset",
+      themeCurrent: "(current)",
       noCommandsHistory: "No commands in history.",
       commandHistoryHeader: "Command History",
     },

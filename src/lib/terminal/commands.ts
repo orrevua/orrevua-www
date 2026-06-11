@@ -11,7 +11,17 @@ import {
   link,
   output,
   combine,
+  segmentedLine,
 } from "./formatter"
+import {
+  themes,
+  getThemeById,
+  applyTheme,
+  saveThemePreference,
+  getSavedThemeId,
+  resetTheme,
+} from "@/lib/themes"
+import type { ThemeDefinition, ThemePalette } from "@/lib/themes"
 
 const registry = new Map<string, TerminalCommand>()
 
@@ -52,6 +62,7 @@ register({
       "/resume": cmdDescs.resume,
       "/stack": cmdDescs.stack,
       "/theme": cmdDescs.theme,
+      "/themes": cmdDescs.themes,
       "/motd": cmdDescs.motd,
     }
 
@@ -500,29 +511,95 @@ register({
   },
 })
 
+function buildPaletteOutput(theme: ThemeDefinition, t: Translations): TerminalOutput {
+  const displayColors: [string, keyof ThemePalette][] = [
+    ["bg-primary", "--bg-primary"],
+    ["bg-secondary", "--bg-secondary"],
+    ["bg-tertiary", "--bg-tertiary"],
+    ["border", "--border"],
+    ["text-primary", "--text-primary"],
+    ["text-secondary", "--text-secondary"],
+    ["text-tertiary", "--text-tertiary"],
+    ["accent", "--accent"],
+    ["success", "--success"],
+    ["warning", "--warning"],
+    ["error", "--error"],
+  ]
+
+  const lines = displayColors.map(([label, varName]) => {
+    const hex = theme.palette[varName]
+    return segmentedLine([
+      { text: "  █████ ", color: hex },
+      { text: `${hex}  ${label}` },
+    ])
+  })
+
+  return combine(
+    header(`${t.terminal.output.themeHeader} (${theme.name})`),
+    output(...lines)
+  )
+}
+
 register({
   name: "/theme",
   description: "Show color palette",
+  usage: "/theme [apply <name> | reset]",
+  execute: (args, t) => {
+    if (args[0]?.toLowerCase() === "apply" && args[1]) {
+      const name = args.slice(1).join("-").toLowerCase()
+      const theme = getThemeById(name)
+      if (!theme) {
+        return output(
+          line(t.terminal.output.themeNotFound.replace("{name}", args.slice(1).join(" ")), "error"),
+          line(t.terminal.output.themeUsage, "dimmed")
+        )
+      }
+      applyTheme(theme)
+      saveThemePreference(theme.id)
+      return combine(
+        output(line(t.terminal.output.themeApplied.replace("{name}", theme.name), "success")),
+        buildPaletteOutput(theme, t)
+      )
+    }
+
+    if (args[0]?.toLowerCase() === "reset") {
+      resetTheme()
+      saveThemePreference("midnight")
+      const midnight = getThemeById("midnight")!
+      return combine(
+        output(line(t.terminal.output.themeReset, "success")),
+        buildPaletteOutput(midnight, t)
+      )
+    }
+
+    const currentId = getSavedThemeId()
+    const theme = getThemeById(currentId) ?? getThemeById("midnight")!
+    return buildPaletteOutput(theme, t)
+  },
+})
+
+register({
+  name: "/themes",
+  description: "List available themes",
   execute: (_args, t) => {
-    const colors: [string, string][] = [
-      ["bg-primary", "#0A0A0B"],
-      ["bg-secondary", "#111113"],
-      ["bg-tertiary", "#1A1A1F"],
-      ["border", "#2A2A30"],
-      ["text-primary", "#EDEDEF"],
-      ["text-secondary", "#8A8A8E"],
-      ["text-tertiary", "#5A5A5E"],
-      ["accent", "#3B82F6"],
-      ["success", "#22C55E"],
-      ["warning", "#EAB308"],
-      ["error", "#EF4444"],
-    ]
+    const currentId = getSavedThemeId()
+    const lines = themes.flatMap((theme) => {
+      const isCurrent = theme.id === currentId
+      const marker = isCurrent ? ` ${t.terminal.output.themeCurrent}` : ""
+      return [
+        segmentedLine([
+          { text: "  ● ", color: theme.palette["--accent"] },
+          { text: `${theme.name}${marker}` },
+        ]),
+        line(`    ${theme.description}`, "dimmed"),
+        blank(),
+      ]
+    })
 
-    const lines = colors.map(([name, hex]) =>
-      line(`  █████ ${hex}  ${name}`)
+    return combine(
+      header(t.terminal.output.themesHeader),
+      output(...lines, line(t.terminal.output.themeUsage, "dimmed"))
     )
-
-    return combine(header(t.terminal.output.themeHeader), output(...lines))
   },
 })
 

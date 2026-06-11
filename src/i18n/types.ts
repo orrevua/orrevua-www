@@ -75,6 +75,7 @@ export type Translations = {
   mascot: {
     hint: string
     hintCommand: string
+    hintLocation: string
     hintOpen: string
   }
   locationPreview: {
@@ -104,6 +105,7 @@ export type Translations = {
       resume: string
       stack: string
       theme: string
+      themes: string
       motd: string
     }
     output: {
@@ -172,6 +174,12 @@ export type Translations = {
       stackHeader: string
       stackIntro: string
       themeHeader: string
+      themesHeader: string
+      themeApplied: string
+      themeNotFound: string
+      themeReset: string
+      themeUsage: string
+      themeCurrent: string
       noCommandsHistory: string
       commandHistoryHeader: string
     }

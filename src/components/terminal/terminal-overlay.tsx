@@ -18,7 +18,7 @@ export function TerminalOverlay() {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onClick={() => dispatch({ type: "CLOSE" })}
+          onClick={() => dispatch({ type: "MINIMIZE" })}
         >
           <motion.div
             className={`flex ${isMaximized ? "h-full" : "h-[75vh]"} w-full max-w-4xl flex-col overflow-hidden rounded-t-xl border-x border-t border-border bg-bg-tertiary shadow-2xl`}

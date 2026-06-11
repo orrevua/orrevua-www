@@ -1,4 +1,4 @@
-import type { TerminalLine, TerminalOutput } from "@/types"
+import type { TerminalLine, TerminalOutput, TerminalSegment } from "@/types"
 
 export function header(text: string): TerminalOutput {
   return {
@@ -34,6 +34,16 @@ export function table(rows: [string, string][]): TerminalLine[] {
 
 export function output(...lines: TerminalLine[]): TerminalOutput {
   return { lines }
+}
+
+export function segmentedLine(
+  segments: TerminalSegment[],
+  fallback?: string
+): TerminalLine {
+  return {
+    content: fallback ?? segments.map((s) => s.text).join(""),
+    segments,
+  }
 }
 
 export function combine(...outputs: TerminalOutput[]): TerminalOutput {

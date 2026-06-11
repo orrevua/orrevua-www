@@ -50,9 +50,16 @@ export type SkillCategory = {
   skills: string[]
 }
 
+export type TerminalSegment = {
+  text: string
+  color?: string
+  style?: "bold" | "dimmed" | "accent" | "success" | "warning" | "error"
+}
+
 export type TerminalLine = {
   content: string
   style?: "bold" | "dimmed" | "accent" | "success" | "warning" | "error"
+  segments?: TerminalSegment[]
   isLink?: { url: string; newTab: boolean }
 }
 

@@ -48,7 +48,7 @@ export function ClaudeMascot() {
               <code className="rounded bg-bg-primary px-1.5 py-0.5 font-mono text-accent">
                 {t.mascot.hintCommand}
               </code>{" "}
-              in the terminal
+              {t.mascot.hintLocation}
             </p>
             <p className="mt-1 text-xs text-text-tertiary">
               {t.mascot.hintOpen}

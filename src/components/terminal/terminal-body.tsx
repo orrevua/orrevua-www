@@ -15,16 +15,17 @@ function Prompt() {
   )
 }
 
+const styleMap: Record<string, string> = {
+  bold: "font-bold",
+  dimmed: "text-text-tertiary",
+  accent: "text-accent",
+  success: "text-success",
+  warning: "text-warning",
+  error: "text-error",
+}
+
 function lineStyle(l: TerminalLine): string {
-  const styles: Record<string, string> = {
-    bold: "font-bold",
-    dimmed: "text-text-tertiary",
-    accent: "text-accent",
-    success: "text-success",
-    warning: "text-warning",
-    error: "text-error",
-  }
-  return l.style ? styles[l.style] ?? "text-text-primary" : "text-text-primary"
+  return l.style ? styleMap[l.style] ?? "text-text-primary" : "text-text-primary"
 }
 
 function OutputLine({ l }: { l: TerminalLine }) {
@@ -39,6 +40,27 @@ function OutputLine({ l }: { l: TerminalLine }) {
         >
           {l.content}
         </a>
+      </div>
+    )
+  }
+
+  if (l.segments && l.segments.length > 0) {
+    return (
+      <div className="leading-relaxed whitespace-pre-wrap">
+        {l.segments.map((seg, i) => {
+          const cls = seg.style
+            ? styleMap[seg.style] ?? "text-text-primary"
+            : "text-text-primary"
+          return (
+            <span
+              key={i}
+              className={seg.color ? undefined : cls}
+              style={seg.color ? { color: seg.color } : undefined}
+            >
+              {seg.text}
+            </span>
+          )
+        })}
       </div>
     )
   }

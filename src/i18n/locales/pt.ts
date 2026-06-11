@@ -76,6 +76,7 @@ export const translations: Translations = {
   mascot: {
     hint: "Psst... tente digitar",
     hintCommand: "agent",
+    hintLocation: "no terminal",
     hintOpen: "Pressione Ctrl+` para abrir",
   },
   locationPreview: {
@@ -110,6 +111,7 @@ export const translations: Translations = {
       resume: "Baixar currículo",
       stack: "Stack tecnológica do portfólio",
       theme: "Mostrar paleta de cores",
+      themes: "Listar temas disponíveis",
       motd: "Mensagem do dia",
     },
     output: {
@@ -195,6 +197,12 @@ export const translations: Translations = {
       stackHeader: "Stack Tecnológica",
       stackIntro: "Este portfólio foi construído com:",
       themeHeader: "Paleta de Cores",
+      themesHeader: "Temas Disponíveis",
+      themeApplied: "Tema aplicado: {name}",
+      themeNotFound: "Tema não encontrado: \"{name}\". Execute /themes para ver as opções.",
+      themeReset: "Tema restaurado para o padrão (Midnight).",
+      themeUsage: "Uso: /theme apply <nome> | /theme reset",
+      themeCurrent: "(atual)",
       noCommandsHistory: "Nenhum comando no histórico.",
       commandHistoryHeader: "Histórico de Comandos",
     },
