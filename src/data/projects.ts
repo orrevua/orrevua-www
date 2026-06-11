@@ -11,7 +11,7 @@ export const projects: Project[] = [
       "A professional portfolio website for a product designer, featuring bilingual support (EN/PT), Sanity CMS integration for easy content updates, responsive design, contact form via SendGrid, and performance monitoring. Built with Next.js 16 App Router and deployed on Vercel.",
     technologies: ["Next.js", "Sanity", "Tailwind CSS", "TypeScript", "SendGrid"],
     githubUrl: "https://github.com/orrevua/gabinajm-portfolio",
-    liveUrl: "https://gabinajm-portfolio.vercel.app",
+    liveUrl: "https://www.gabinajm.com.br",
     isFeatured: true,
   },
   {
