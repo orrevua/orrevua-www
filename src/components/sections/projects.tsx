@@ -44,9 +44,13 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
                   <h3 className="text-xl font-semibold text-text-primary">
                     {translated?.displayName ?? project.displayName}
                   </h3>
-                  {project.badge === "study" && (
-                    <span className="rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
-                      study
+                  {project.badge && (
+                    <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${
+                      project.badge === "production"
+                        ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                        : "border-accent/30 bg-accent/10 text-accent"
+                    }`}>
+                      {project.badge}
                     </span>
                   )}
                 </div>
@@ -61,15 +65,24 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
                 </div>
 
                 <div className="mt-4 flex items-center gap-3">
-                  <a
-                    href={project.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-text-tertiary transition-colors hover:text-accent"
-                    aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
-                  >
-                    <GitHubIcon size={18} />
-                  </a>
+                  {project.githubUrl ? (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text-tertiary transition-colors hover:text-accent"
+                      aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
+                    >
+                      <GitHubIcon size={18} />
+                    </a>
+                  ) : (
+                    <span
+                      className="cursor-default text-text-tertiary/40"
+                      title="Private repository"
+                    >
+                      <GitHubIcon size={18} />
+                    </span>
+                  )}
                   {project.liveUrl && (
                     <a
                       href={project.liveUrl}
@@ -100,9 +113,13 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
                     <span className="font-medium text-text-primary">
                       {translated?.displayName ?? project.displayName}
                     </span>
-                    {project.badge === "study" && (
-                      <span className="ml-2 rounded-full border border-accent/30 bg-accent/10 px-2 py-0.5 text-xs font-medium text-accent">
-                        study
+                    {project.badge && (
+                      <span className={`ml-2 rounded-full border px-2 py-0.5 text-xs font-medium ${
+                        project.badge === "production"
+                          ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-400"
+                          : "border-accent/30 bg-accent/10 text-accent"
+                      }`}>
+                        {project.badge}
                       </span>
                     )}
                     <span className="ml-3 text-sm text-text-secondary">
@@ -110,15 +127,24 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
                     </span>
                   </div>
                   <div className="flex flex-shrink-0 items-center gap-2">
-                    <a
-                      href={project.githubUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-text-tertiary transition-colors hover:text-accent"
-                      aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
-                    >
-                      <GitHubIcon size={16} />
-                    </a>
+                    {project.githubUrl ? (
+                      <a
+                        href={project.githubUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-text-tertiary transition-colors hover:text-accent"
+                        aria-label={`${translated?.displayName ?? project.displayName} on GitHub`}
+                      >
+                        <GitHubIcon size={16} />
+                      </a>
+                    ) : (
+                      <span
+                        className="cursor-default text-text-tertiary/40"
+                        title="Private repository"
+                      >
+                        <GitHubIcon size={16} />
+                      </span>
+                    )}
                     {project.liveUrl && (
                       <a
                         href={project.liveUrl}

@@ -309,6 +309,13 @@ export const translations: Translations = {
       },
     },
     projects: {
+      predsaude: {
+        displayName: "PredSaúde — Public Health Platform",
+        description:
+          "Full-stack SaaS platform for Brazilian municipalities, unifying patient records across UBS and UPA units.",
+        longDescription:
+          "Full-stack SaaS platform for Brazilian municipalities, unifying patient records across UBS and UPA units and integrating with the federal e-SUS APS ecosystem and the national RNDS (Rede Nacional de Dados em Saúde). Used in production across multiple municipalities in Rio Grande do Norte and Pará.",
+      },
       "gabinajm-portfolio": {
         displayName: "Client Portfolio Site",
         description:

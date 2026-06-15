@@ -356,8 +356,11 @@ register({
         line(translated?.longDescription ?? project.longDescription),
         blank(),
         line(`${t.terminal.output.technologies} ${project.technologies.join(", ")}`, "dimmed"),
-        link(`GitHub: ${project.githubUrl}`, project.githubUrl),
       ]
+
+      if (project.githubUrl) {
+        lines.push(link(`GitHub: ${project.githubUrl}`, project.githubUrl))
+      }
 
       if (project.liveUrl) {
         lines.push(link(`Live: ${project.liveUrl}`, project.liveUrl))

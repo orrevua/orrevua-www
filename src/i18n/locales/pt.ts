@@ -309,6 +309,13 @@ export const translations: Translations = {
       },
     },
     projects: {
+      predsaude: {
+        displayName: "PredSaúde — Plataforma de Saúde Pública",
+        description:
+          "Plataforma SaaS full-stack para municípios brasileiros, unificando prontuários de pacientes entre unidades UBS e UPA.",
+        longDescription:
+          "Plataforma SaaS full-stack para municípios brasileiros, unificando prontuários de pacientes entre unidades UBS e UPA e integrando com o ecossistema federal e-SUS APS e a RNDS (Rede Nacional de Dados em Saúde) do Ministério da Saúde. Em produção em múltiplos municípios do Rio Grande do Norte e Pará.",
+      },
       "gabinajm-portfolio": {
         displayName: "Site Portfólio de Cliente",
         description:

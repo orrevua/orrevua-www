@@ -39,10 +39,10 @@ export type Project = {
   description: string
   longDescription: string
   technologies: string[]
-  githubUrl: string
+  githubUrl?: string
   liveUrl?: string
   isFeatured: boolean
-  badge?: "study"
+  badge?: "study" | "production"
 }
 
 export type SkillCategory = {

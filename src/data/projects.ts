@@ -2,6 +2,19 @@ import type { Project } from "@/types"
 
 export const projects: Project[] = [
   {
+    id: "predsaude",
+    name: "predsaude",
+    displayName: "PredSaúde — Public Health Platform",
+    description:
+      "Full-stack SaaS platform for Brazilian municipalities, unifying patient records across UBS and UPA units.",
+    longDescription:
+      "Full-stack SaaS platform for Brazilian municipalities, unifying patient records across UBS and UPA units and integrating with the federal e-SUS APS ecosystem and the national RNDS (Rede Nacional de Dados em Saúde). Used in production across multiple municipalities in Rio Grande do Norte and Pará.",
+    technologies: ["Python", "TypeScript", "React", "Node.js", "AWS EC2", "AWS RDS", "AWS S3", "CloudFront", "PostgreSQL", "SSE", "REST APIs"],
+    liveUrl: "https://www.predsaude.com.br",
+    isFeatured: true,
+    badge: "production",
+  },
+  {
     id: "gabinajm-portfolio",
     name: "gabinajm-portfolio",
     displayName: "Client Portfolio Site",
