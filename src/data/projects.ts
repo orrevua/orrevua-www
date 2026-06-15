@@ -10,7 +10,8 @@ export const projects: Project[] = [
     longDescription:
       "Full-stack SaaS platform for Brazilian municipalities, unifying patient records across UBS and UPA units and integrating with the federal e-SUS APS ecosystem and the national RNDS (Rede Nacional de Dados em Saúde). Used in production across multiple municipalities in Rio Grande do Norte and Pará.",
     technologies: ["Python", "TypeScript", "React", "Node.js", "AWS EC2", "AWS RDS", "AWS S3", "CloudFront", "PostgreSQL", "SSE", "REST APIs"],
-    liveUrl: "https://www.predsaude.com.br",
+    liveUrl: "https://predsaude.com",
+    previewUrl: "/previews/predsaude.png",
     isFeatured: true,
     badge: "production",
   },

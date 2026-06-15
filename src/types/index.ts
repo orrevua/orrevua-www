@@ -41,6 +41,7 @@ export type Project = {
   technologies: string[]
   githubUrl?: string
   liveUrl?: string
+  previewUrl?: string
   isFeatured: boolean
   badge?: "study" | "production"
 }
