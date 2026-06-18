@@ -357,6 +357,97 @@ export const translations: Translations = {
         longDescription:
           "Uma aplicação JavaScript para rastrear e visualizar despesas pessoais.",
       },
+      "discrete-mathematics-tutor": {
+        displayName: "Tutor de Matemática Discreta",
+        description:
+          "Sistema Tutor Inteligente adaptativo com visualização de grafo de conhecimento e chat com IA.",
+        longDescription:
+          "Um Sistema Tutor Inteligente adaptativo para um curso de matemática brasileiro. Realiza avaliações diagnósticas, exibe um grafo de conhecimento com 17 conceitos codificados por cor de acordo com o nível de domínio, e adapta o conteúdo com base no desempenho do estudante. Inclui chat com tutor IA via Gemini.",
+      },
+      loansforgood: {
+        displayName: "Loans For Good",
+        description:
+          "Sistema de gerenciamento de propostas de empréstimo com formulários dinâmicos e fila de tarefas.",
+        longDescription:
+          "Um sistema full-stack de gerenciamento de propostas de empréstimo. Administradores customizam formulários de aplicação selecionando e configurando campos. Propostas são submetidas via API, processadas por uma fila Celery, e revisadas no painel admin.",
+      },
+      "fullstack-afiliados": {
+        displayName: "Gerenciador de Transações de Afiliados",
+        description:
+          "App full-stack para upload e gerenciamento de dados de transações de afiliados com JWT.",
+        longDescription:
+          "Uma aplicação full-stack para gerenciamento de dados de transações. Usuários fazem upload de arquivos de transação, visualizam registros e realizam operações CRUD através de endpoints autenticados com JWT.",
+      },
+      "lobby-order-storing": {
+        displayName: "Lobby Order Storing",
+        description:
+          "Aplicação web para armazenar e gerenciar pedidos em um sistema de lobby.",
+        longDescription:
+          "Uma aplicação web Next.js para armazenar e gerenciar pedidos em um sistema de lobby.",
+      },
+      "evergreen-presentation": {
+        displayName: "Evergreen Presentation",
+        description:
+          "App de apresentação web construído com TypeScript e Tailwind CSS.",
+        longDescription:
+          "Uma aplicação web de apresentação para criar e exibir slideshows, construída com ferramentas modernas de frontend.",
+      },
+      "electric-discharge-information": {
+        displayName: "Info Descarga Elétrica",
+        description:
+          "Site informativo sobre segurança elétrica no dia a dia.",
+        longDescription:
+          "Um site educacional sobre como lidar com eletricidade no dia a dia, tornando o conhecimento sobre segurança elétrica mais acessível.",
+      },
+      "zipcode-geolocation": {
+        displayName: "Geolocalização por CEP",
+        description:
+          "Integração com Google Maps para busca de geolocalização por CEP.",
+        longDescription:
+          "Um projeto de estudo demonstrando integração com a API do Google Maps para funcionalidade de geolocalização baseada em CEP.",
+      },
+      "user-managing": {
+        displayName: "Gerenciamento de Usuários",
+        description:
+          "App CRUD de gerenciamento de usuários com fluxo de cadastro de perfil.",
+        longDescription:
+          "Uma aplicação de gerenciamento de usuários com processo de cadastro em três etapas: registro de usuário, criação de perfil e uma listagem mostrando usuários com seus perfis associados. Full-stack com backend em Django REST API.",
+      },
+      "todo-list-react": {
+        displayName: "Lista de Tarefas",
+        description:
+          "App simples de registro de tarefas com prevenção de envio vazio.",
+        longDescription:
+          "Uma aplicação de registro de tarefas construída com ReactJS, com prevenção de envio vazio.",
+      },
+      "temperature-forecasting": {
+        displayName: "Previsão de Temperatura",
+        description:
+          "App Django integrando com a plataforma IoT ThingSpeak para análise de dados de temperatura.",
+        longDescription:
+          "Uma aplicação web construída com Django que integra com a plataforma de dados IoT ThingSpeak para coletar e analisar dados de temperatura.",
+      },
+      "iot-thingspeak": {
+        displayName: "IoT ThingSpeak",
+        description:
+          "Coleta e visualização de dados IoT usando Django e ThingSpeak.",
+        longDescription:
+          "Um projeto IoT em Python que integra com a plataforma ThingSpeak para coleta e visualização de dados, construído com Django.",
+      },
+      "item-reminder": {
+        displayName: "Lembrete de Itens",
+        description:
+          "Aplicação Java para lembretes de itens usando Maven.",
+        longDescription:
+          "Uma aplicação Java para gerenciamento de lembretes de itens, construída com Maven.",
+      },
+      "projeto-final-cadastro": {
+        displayName: "Sistema de Cadastro",
+        description:
+          "Sistema de cadastro de compradores e vendedores com suporte a múltiplos pagamentos em Java.",
+        longDescription:
+          "Um sistema de cadastro em Java para compradores e vendedores, com registro de produtos, transações de compra/venda e múltiplos métodos de pagamento (Pix, Boleto, Débito, Cartão de crédito). Demonstra conceitos de POO como classes abstratas, generics e enums.",
+      },
     },
   },
 }
