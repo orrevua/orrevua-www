@@ -52,7 +52,11 @@ export const projects: Project[] = [
     technologies: ["FastAPI", "Python", "Next.js", "TypeScript", "SQLite", "Gemini API"],
     githubUrl: "https://github.com/orrevua/discrete-mathematics-tutor",
     liveUrl: "https://discrete-mathematics-tutor.vercel.app",
-    previewUrl: "/previews/discrete-mathematics-tutor.png",
+    previewUrls: [
+      "/previews/discrete-mathematics-tutor-1.png",
+      "/previews/discrete-mathematics-tutor-2.png",
+      "/previews/discrete-mathematics-tutor-3.png",
+    ],
     isFeatured: true,
   },
   {
@@ -65,6 +69,10 @@ export const projects: Project[] = [
     technologies: ["Next.js", "React", "Supabase", "Tailwind CSS"],
     githubUrl: "https://github.com/orrevua/expense_viewer",
     liveUrl: "https://expense-viewer-nu.vercel.app/",
+    previewUrls: [
+      "/previews/expense-viewer-1.png",
+      "/previews/expense-viewer-2.png",
+    ],
     isFeatured: true,
   },
   {
@@ -117,7 +125,11 @@ export const projects: Project[] = [
     technologies: ["Next.js", "TypeScript", "React"],
     githubUrl: "https://github.com/orrevua/lobby-order-storing",
     liveUrl: "https://lobby-order-storing.vercel.app",
-    previewUrl: "/previews/lobby-order-storing.png",
+    previewUrls: [
+      "/previews/lobby-order-storing-1.png",
+      "/previews/lobby-order-storing-2.png",
+      "/previews/lobby-order-storing-3.png",
+    ],
     isFeatured: true,
   },
   {
