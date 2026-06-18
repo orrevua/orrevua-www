@@ -117,8 +117,8 @@ export const projects: Project[] = [
     technologies: ["Next.js", "TypeScript", "React"],
     githubUrl: "https://github.com/orrevua/lobby-order-storing",
     liveUrl: "https://lobby-order-storing.vercel.app",
-    isFeatured: false,
-    badge: "study",
+    previewUrl: "/previews/lobby-order-storing.png",
+    isFeatured: true,
   },
   {
     id: "sgbd-imd",
