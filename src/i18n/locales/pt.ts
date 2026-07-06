@@ -52,6 +52,41 @@ export const translations: Translations = {
     description:
       "Aberto a conversas sobre engenharia, arquitetura ou oportunidades.",
     downloadResume: "Baixar Currículo ↓",
+    freelanceCta: "Contrate-me para um projeto →",
+  },
+  freelance: {
+    title: "Trabalhe comigo",
+    subtitle:
+      "Tem um projeto em mente? Conte-me sobre ele e retorno em até 48 horas.",
+    backToPortfolio: "← Voltar ao portfólio",
+    nameLabel: "Nome *",
+    namePlaceholder: "Seu nome",
+    emailLabel: "Email *",
+    emailPlaceholder: "voce@empresa.com",
+    companyLabel: "Empresa",
+    companyPlaceholder: "Sua empresa (opcional)",
+    projectTypeLabel: "Tipo de projeto",
+    projectTypePlaceholder: "Selecione um tipo de projeto",
+    projectTypeOptions: {
+      website: "Site / Landing page",
+      webapp: "Aplicação web",
+      api: "API / Serviço backend",
+      automation: "Automação / Scripts",
+      consulting: "Consultoria / Revisão de arquitetura",
+      other: "Outro",
+    },
+    budgetLabel: "Orçamento",
+    budgetPlaceholder: "ex: R$ 10.000 – R$ 25.000 (opcional)",
+    timelineLabel: "Prazo",
+    timelinePlaceholder: "ex: 4-6 semanas (opcional)",
+    descriptionLabel: "Descrição do projeto *",
+    descriptionPlaceholder:
+      "O que você quer construir? Que problema resolve? Algum requisito técnico?",
+    submit: "Enviar solicitação",
+    sending: "Enviando...",
+    successMessage:
+      "Obrigado! Sua solicitação foi recebida. Entrarei em contato por email em breve.",
+    errorMessage: "Algo deu errado. Tente novamente.",
   },
   feedback: {
     heading: "Deixe uma mensagem",
@@ -113,6 +148,7 @@ export const translations: Translations = {
       theme: "Mostrar paleta de cores",
       themes: "Listar temas disponíveis",
       motd: "Mensagem do dia",
+      freelance: "Solicitar um projeto freelance",
     },
     output: {
       helpShell: "Shell",
@@ -194,6 +230,7 @@ export const translations: Translations = {
       linkedinOpening: "Abrindo LinkedIn...",
       adminOpening: "Abrindo painel administrativo...",
       resumeDownloading: "Baixando currículo...",
+      freelanceOpening: "Abrindo página de solicitação freelance...",
       stackHeader: "Stack Tecnológica",
       stackIntro: "Este portfólio foi construído com:",
       themeHeader: "Paleta de Cores",

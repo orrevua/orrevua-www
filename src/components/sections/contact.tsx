@@ -32,6 +32,15 @@ export function Contact() {
           {personalInfo.email}
         </a>
 
+        <div className="mt-6">
+          <a
+            href="/freelance"
+            className="inline-block rounded-lg border border-accent px-6 py-3 font-mono text-sm text-accent transition-colors hover:bg-accent hover:text-bg-primary"
+          >
+            {t.contact.freelanceCta}
+          </a>
+        </div>
+
         <div className="mt-6 flex items-center justify-center gap-4">
           {github && (
             <a

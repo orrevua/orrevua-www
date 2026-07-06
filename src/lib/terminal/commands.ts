@@ -61,6 +61,7 @@ register({
       "/linkedin": cmdDescs.linkedin,
       "/resume": cmdDescs.resume,
       "/stack": cmdDescs.stack,
+      "/freelance": cmdDescs.freelance,
       "/theme": cmdDescs.theme,
       "/themes": cmdDescs.themes,
       "/motd": cmdDescs.motd,
@@ -484,6 +485,20 @@ register({
       window.open("/admin", "_blank")
     }
     return output(line(t.terminal.output.adminOpening, "success"), link("/admin", "/admin"))
+  },
+})
+
+register({
+  name: "/freelance",
+  description: "Request a freelance project",
+  execute: (_args, t) => {
+    if (typeof window !== "undefined") {
+      window.open("/freelance", "_blank")
+    }
+    return output(
+      line(t.terminal.output.freelanceOpening, "success"),
+      link("/freelance", "/freelance")
+    )
   },
 })
 

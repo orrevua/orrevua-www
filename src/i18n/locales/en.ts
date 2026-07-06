@@ -52,6 +52,41 @@ export const translations: Translations = {
     description:
       "Open to conversations about engineering, architecture, or opportunities.",
     downloadResume: "Download Resume ↓",
+    freelanceCta: "Hire me for a project →",
+  },
+  freelance: {
+    title: "Work with me",
+    subtitle:
+      "Have a project in mind? Tell me about it and I'll get back to you within 48 hours.",
+    backToPortfolio: "← Back to portfolio",
+    nameLabel: "Name *",
+    namePlaceholder: "Your name",
+    emailLabel: "Email *",
+    emailPlaceholder: "you@company.com",
+    companyLabel: "Company",
+    companyPlaceholder: "Your company (optional)",
+    projectTypeLabel: "Project type",
+    projectTypePlaceholder: "Select a project type",
+    projectTypeOptions: {
+      website: "Website / Landing page",
+      webapp: "Web application",
+      api: "API / Backend service",
+      automation: "Automation / Scripting",
+      consulting: "Consulting / Architecture review",
+      other: "Other",
+    },
+    budgetLabel: "Budget",
+    budgetPlaceholder: "e.g., $2,000 – $5,000 (optional)",
+    timelineLabel: "Timeline",
+    timelinePlaceholder: "e.g., 4-6 weeks (optional)",
+    descriptionLabel: "Project description *",
+    descriptionPlaceholder:
+      "What are you building? What problem does it solve? Any technical requirements?",
+    submit: "Send request",
+    sending: "Sending...",
+    successMessage:
+      "Thanks! Your request was received. I'll reach out to you by email soon.",
+    errorMessage: "Something went wrong. Please try again.",
   },
   feedback: {
     heading: "Leave a message",
@@ -113,6 +148,7 @@ export const translations: Translations = {
       theme: "Show color palette",
       themes: "List available themes",
       motd: "Message of the day",
+      freelance: "Request a freelance project",
     },
     output: {
       helpShell: "Shell",
@@ -194,6 +230,7 @@ export const translations: Translations = {
       linkedinOpening: "Opening LinkedIn...",
       adminOpening: "Opening admin panel...",
       resumeDownloading: "Downloading resume...",
+      freelanceOpening: "Opening freelance request page...",
       stackHeader: "Tech Stack",
       stackIntro: "This portfolio is built with:",
       themeHeader: "Color Palette",

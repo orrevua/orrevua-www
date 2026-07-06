@@ -51,6 +51,38 @@ export type Translations = {
     heading: string
     description: string
     downloadResume: string
+    freelanceCta: string
+  }
+  freelance: {
+    title: string
+    subtitle: string
+    backToPortfolio: string
+    nameLabel: string
+    namePlaceholder: string
+    emailLabel: string
+    emailPlaceholder: string
+    companyLabel: string
+    companyPlaceholder: string
+    projectTypeLabel: string
+    projectTypePlaceholder: string
+    projectTypeOptions: {
+      website: string
+      webapp: string
+      api: string
+      automation: string
+      consulting: string
+      other: string
+    }
+    budgetLabel: string
+    budgetPlaceholder: string
+    timelineLabel: string
+    timelinePlaceholder: string
+    descriptionLabel: string
+    descriptionPlaceholder: string
+    submit: string
+    sending: string
+    successMessage: string
+    errorMessage: string
   }
   feedback: {
     heading: string
@@ -107,6 +139,7 @@ export type Translations = {
       theme: string
       themes: string
       motd: string
+      freelance: string
     }
     output: {
       helpShell: string
@@ -171,6 +204,7 @@ export type Translations = {
       linkedinOpening: string
       adminOpening: string
       resumeDownloading: string
+      freelanceOpening: string
       stackHeader: string
       stackIntro: string
       themeHeader: string
