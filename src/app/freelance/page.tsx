@@ -4,6 +4,7 @@ import { useState, useRef, type FormEvent } from "react"
 import Link from "next/link"
 import { useTranslation } from "@/i18n/context"
 import { LanguageSwitch } from "@/components/ui/language-switch"
+import { ThemeModeToggle } from "@/components/ui/theme-mode-toggle"
 
 const inputClassName =
   "w-full rounded-lg border border-border bg-bg-tertiary px-4 py-3 text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
@@ -87,7 +88,10 @@ export default function FreelancePage() {
           >
             {t.freelance.backToPortfolio}
           </Link>
-          <LanguageSwitch />
+          <div className="flex items-center gap-3">
+            <ThemeModeToggle />
+            <LanguageSwitch />
+          </div>
         </div>
 
         <h1 className="text-3xl font-bold text-text-primary sm:text-4xl">

@@ -20,6 +20,8 @@ import {
   saveThemePreference,
   getSavedThemeId,
   resetTheme,
+  saveThemeSource,
+  clearThemeSource,
 } from "@/lib/themes"
 import type { ThemeDefinition, ThemePalette } from "@/lib/themes"
 
@@ -574,6 +576,7 @@ register({
       }
       applyTheme(theme)
       saveThemePreference(theme.id)
+      saveThemeSource("terminal")
       return combine(
         output(line(t.terminal.output.themeApplied.replace("{name}", theme.name), "success")),
         buildPaletteOutput(theme, t)
@@ -583,6 +586,7 @@ register({
     if (args[0]?.toLowerCase() === "reset") {
       resetTheme()
       saveThemePreference("midnight")
+      clearThemeSource()
       const midnight = getThemeById("midnight")!
       return combine(
         output(line(t.terminal.output.themeReset, "success")),

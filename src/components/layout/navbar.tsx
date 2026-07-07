@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react"
 import { useActiveSection } from "@/lib/hooks/use-active-section"
 import { useTranslation } from "@/i18n/context"
 import { LanguageSwitch } from "@/components/ui/language-switch"
+import { ThemeModeToggle } from "@/components/ui/theme-mode-toggle"
 
 const NAV_IDS = [
   "about",
@@ -62,6 +63,7 @@ export function Navbar() {
             ))}
           </ul>
 
+          <ThemeModeToggle />
           <LanguageSwitch />
 
           <button

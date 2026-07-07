@@ -63,7 +63,7 @@ function escapeHtml(s: string): string {
 function buildEmailHtml(data: Omit<FreelanceData, "honeypot">): string {
   const rows = [
     ["Name", data.name],
-    ["Email", `<a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a>`],
+    ["Email", `<a href="mailto:${escapeHtml(data.email)}" style="color:#C2410C;text-decoration:none">${escapeHtml(data.email)}</a>`],
     data.company ? ["Company", data.company] : null,
     data.projectType ? ["Project type", data.projectType] : null,
     data.budget ? ["Budget", data.budget] : null,
@@ -73,17 +73,24 @@ function buildEmailHtml(data: Omit<FreelanceData, "honeypot">): string {
   const tableRows = rows
     .map(
       ([label, value]) =>
-        `<tr><td style="padding:6px 12px;font-weight:600;vertical-align:top;white-space:nowrap;color:#666">${escapeHtml(label)}</td><td style="padding:6px 12px">${value}</td></tr>`
+        `<tr><td style="padding:8px 14px;font-weight:600;vertical-align:top;white-space:nowrap;color:#6B5744;font-size:14px">${escapeHtml(label)}</td><td style="padding:8px 14px;color:#2D2013;font-size:14px">${value}</td></tr>`
     )
     .join("")
 
   return `
-    <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
-      <h2 style="margin:0 0 16px;color:#333">New Freelance Request</h2>
-      <table style="border-collapse:collapse;width:100%;margin-bottom:20px">${tableRows}</table>
-      <h3 style="margin:16px 0 8px;color:#333">Description</h3>
-      <div style="padding:12px 16px;background:#f5f5f5;border-radius:6px;white-space:pre-wrap;line-height:1.5">${escapeHtml(data.description)}</div>
-      <p style="margin-top:24px;font-size:13px;color:#999">Sent from orrevua.com freelance form</p>
+    <div style="font-family:system-ui,-apple-system,sans-serif;max-width:600px;margin:0 auto;background:#FAF6F1;border-radius:12px;overflow:hidden;border:1px solid #D1C4B4">
+      <div style="background:#C2410C;padding:24px 28px">
+        <h2 style="margin:0;color:#FAF6F1;font-size:20px;font-weight:700">New Freelance Request</h2>
+        <p style="margin:4px 0 0;color:#FAF6F1;opacity:0.85;font-size:13px">via orrevua.com</p>
+      </div>
+      <div style="padding:24px 28px">
+        <table style="border-collapse:collapse;width:100%;margin-bottom:20px;background:#F0EAE2;border-radius:8px;overflow:hidden">${tableRows}</table>
+        <h3 style="margin:0 0 8px;color:#2D2013;font-size:15px;font-weight:600">Description</h3>
+        <div style="padding:14px 18px;background:#E5DDD3;border-radius:8px;white-space:pre-wrap;line-height:1.6;color:#2D2013;font-size:14px;border:1px solid #D1C4B4">${escapeHtml(data.description)}</div>
+      </div>
+      <div style="padding:16px 28px;border-top:1px solid #D1C4B4">
+        <p style="margin:0;font-size:12px;color:#8B7A68">Sent from orrevua.com freelance form</p>
+      </div>
     </div>
   `
 }

@@ -1,6 +1,26 @@
 import type { ThemeDefinition } from "./types"
 
 const STORAGE_KEY = "orrevua-theme"
+const SOURCE_KEY = "orrevua-theme-source"
+
+export type ThemeSource = "terminal" | "toggle"
+
+export function saveThemeSource(source: ThemeSource): void {
+  if (typeof window === "undefined") return
+  localStorage.setItem(SOURCE_KEY, source)
+  window.dispatchEvent(new CustomEvent("theme-source-change", { detail: source }))
+}
+
+export function getThemeSource(): ThemeSource | null {
+  if (typeof window === "undefined") return null
+  return localStorage.getItem(SOURCE_KEY) as ThemeSource | null
+}
+
+export function clearThemeSource(): void {
+  if (typeof window === "undefined") return
+  localStorage.removeItem(SOURCE_KEY)
+  window.dispatchEvent(new CustomEvent("theme-source-change", { detail: null }))
+}
 
 export function applyTheme(theme: ThemeDefinition): void {
   if (typeof window === "undefined") return
