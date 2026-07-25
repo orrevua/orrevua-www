@@ -1,0 +1,71 @@
+---
+slug: "shipping-designer-portfolio-with-sanity"
+title: "Shipping a designer's portfolio with a headless CMS in a few evenings"
+description: "How I turned a Figma file into a bilingual, editable portfolio for a product designer, and why Sanity earned its place over yet another folder of MDX files."
+date: "2026-07-25"
+tags: ["nextjs", "sanity", "cms", "architecture", "collaboration"]
+---
+
+## The brief
+
+A friend, [Gabi Abinajm](https://www.linkedin.com/in/gabinajm/), a product designer, needed a portfolio. The constraints were the interesting part: she had to be able to add, reorder, and translate case studies without ever opening a code editor, videos had to play cleanly on mobile without dragging the page down, and a few of the projects had to sit behind a password because they were under NDA.
+
+I built it as a side project across a couple of evenings. The stack sounds unremarkable, Next.js 16, TypeScript, Tailwind, Vercel, but the interesting decisions live below that surface.
+
+Live: [gabinajm.com.br](http://gabinajm.com.br)  
+Source: [https://github.com/orrevua/gabinajm-portfolio](https://github.com/orrevua/gabinajm-portfolio)
+
+## Why Sanity, not a folder of MDX files
+
+My own portfolio ships content as MDX in the repo. That works because I am the only author and I like commits. For a portfolio where the designer owns the content lifecycle, that model breaks in two places: every content change becomes a pull request, and translations bloat the diff review beyond anything a non-engineer wants to see.
+
+Sanity solved both. The schema lives in `studio/`, the CMS runs at a dedicated route, and Gabi drops in projects the same way she drops assets into Figma. The site rebuilds via ISR when content changes, so no manual redeploy.
+
+The tradeoff I accepted: one more service in the stack, plus a monthly cap on Sanity's free tier that this site will not hit for years.
+
+_A CMS is not a "nice to have" the moment a non-engineer needs to publish. It is the whole product._
+
+## Clean architecture in a small Next.js app
+
+For a five-page site, clean architecture reads like overkill. I did it anyway, and I would do it again:
+
+```
+src/
+├── app/          # Next.js routes, thin — mostly composition
+├── adapters/     # UI components, presentation-only
+├── domain/       # Types and pure business rules
+├── services/     # Sanity client, queries, SendGrid client
+└── i18n/         # Locale provider, EN/PT dictionaries
+```
+
+The payoff shows up the first time you swap something. When SendGrid's free tier tightened, replacing the mail service was a single file. When Sanity's query shape changed, one adapter absorbed the migration. Routes did not know either service existed.
+
+For a project this small the boundaries feel ceremonial, but the moment you add a second developer or a second CMS, ceremony pays for itself.
+
+## Bilingual without a framework
+
+Cookie-based locale, no `/en` or `/pt` in the URL, one canonical per page. Locale flips are instant because they swap a context, not a route. This is the same pattern I use on my own site and it survives fine at this scale.
+
+Sanity's content is authored in both languages inside a single document, with each field carrying `{ en: string; pt: string }`. Missing a translation is a compile-time guarantee at the type layer and a soft fallback at render.
+
+## Video the responsible way
+
+Case studies lean on motion, screencasts of interactions, prototype walkthroughs, that kind of thing. Serving raw MP4s would murder mobile bandwidth. I encoded to HLS and used [hls.js](https://github.com/video-dev/hls.js) with a small lazy-loading wrapper:
+
+```
+const HLSVideo = dynamic(() => import("@/adapters/hls-video"), { ssr: false })
+```
+
+The bundle only ships to visitors who actually scroll to a video. Cost of the trick: a client-only component and one dynamic import. Payoff: a portfolio full of long videos that scores well on Core Web Vitals.
+
+## Access control on private case studies
+
+A few projects were under NDA. The compromise: a short passphrase per project, verified server-side against a hashed value in Sanity, unlocking the case study for the current session. No user accounts, no database, no signup flow, just a form and a cookie.
+
+For a portfolio that lives entirely to be shared with recruiters, this is the right altitude of security. It gates the content without turning the site into an app.
+
+## The takeaway
+
+Collaboration is the untold headline of shipping something like this. Gabi handed me a Figma with real components, real states, real content, and answered questions in minutes. I could focus on the parts I care about, architecture, performance, boring reliability, because the design was not a moving target.
+
+The stack matters less than the seam between people. Pick tools that let the non-engineer keep shipping after you leave.
