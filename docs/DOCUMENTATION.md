@@ -1,4 +1,4 @@
-# Documentacao Tecnica — orrevua.dev
+﻿# Documentacao Tecnica - orrevua.dev
 
 **Repositorio:** [orrevua/orrevua-www](https://github.com/orrevua/orrevua-www)
 **URL de Producao:** https://orrevua.dev
@@ -23,6 +23,8 @@
 13. [API Routes](#api-routes)
 14. [Tipos TypeScript](#tipos-typescript)
 15. [Estrutura de Diretorios](#estrutura-de-diretorios)
+16. [Blog Bilingue (MDX)](#blog-bilingue-mdx)
+17. [Blog CMS (Editor Rico + PRs)](#blog-cms-editor-rico--prs)
 
 ---
 
@@ -66,17 +68,17 @@ O projeto segue a arquitetura App Router do Next.js 16 com separacao clara entre
 
 Os dados do portfolio sao definidos em arquivos TypeScript estaticos, sem banco de dados externo:
 
-- **`personal.ts`** — Dados de exibicao do proprietario (nome, titulo, localizacao, redes sociais, paragrafos do "sobre")
-- **`experience.ts`** — Historico profissional (array de entradas com empresa, cargo, periodo, descricao, tecnologias)
-- **`projects.ts`** — Projetos (array com 3 em destaque e demais listados)
-- **`skills.ts`** — Habilidades tecnicas organizadas em 6 categorias
-- **`feedbacks.json`** — Feedbacks aprovados (populado via merge de PRs no GitHub)
+- **`personal.ts`** - Dados de exibicao do proprietario (nome, titulo, localizacao, redes sociais, paragrafos do "sobre")
+- **`experience.ts`** - Historico profissional (array de entradas com empresa, cargo, periodo, descricao, tecnologias)
+- **`projects.ts`** - Projetos (array com 3 em destaque e demais listados)
+- **`skills.ts`** - Habilidades tecnicas organizadas em 6 categorias
+- **`feedbacks.json`** - Feedbacks aprovados (populado via merge de PRs no GitHub)
 
 ### Camada de Componentes (`src/components/`)
 
 Organizada em quatro diretorios:
 
-**`sections/`** — Secoes da pagina principal:
+**`sections/`** - Secoes da pagina principal:
 | Componente | Descricao |
 |---|---|
 | `hero.tsx` | Secao de abertura com titulo animado (cursor piscante), tagline e CTAs |
@@ -89,20 +91,20 @@ Organizada em quatro diretorios:
 | `feedback-form.tsx` | Formulario de submissao de feedback com validacao client-side |
 | `contact.tsx` | Secao de contato com links de email, GitHub, LinkedIn e download de curriculo |
 
-**`terminal/`** — Emulador de terminal (detalhado na [secao dedicada](#terminal-interativo))
+**`terminal/`** - Emulador de terminal (detalhado na [secao dedicada](#terminal-interativo))
 
-**`layout/`** — `navbar.tsx` (navegacao fixa com scroll-spy e seletor de idioma) e `footer.tsx`
+**`layout/`** - `navbar.tsx` (navegacao fixa com scroll-spy e seletor de idioma) e `footer.tsx`
 
-**`ui/`** — Componentes reutilizaveis: `section-label`, `tech-tag`, `icons`, `claude-mascot`, `location-preview`, `language-switch`
+**`ui/`** - Componentes reutilizaveis: `section-label`, `tech-tag`, `icons`, `claude-mascot`, `location-preview`, `language-switch`
 
 ### Camada de Bibliotecas (`src/lib/`)
 
-- **`github.ts`** — Cliente Octokit e constantes do repositorio
-- **`admin-auth.ts`** — Autenticacao do painel admin com comparacao timing-safe
-- **`rate-limit.ts`** — Rate limiting em memoria (cooldown de 60s por IP)
-- **`translate.ts`** — Deteccao de idioma (tinyld) e traducao (MyMemory API)
-- **`terminal/`** — Parser, formatador, registro de comandos e autocomplete do terminal
-- **`hooks/`** — `use-keydown` (atalhos de teclado), `use-active-section` (Intersection Observer)
+- **`github.ts`** - Cliente Octokit e constantes do repositorio
+- **`admin-auth.ts`** - Autenticacao do painel admin com comparacao timing-safe
+- **`rate-limit.ts`** - Rate limiting em memoria (cooldown de 60s por IP)
+- **`translate.ts`** - Deteccao de idioma (tinyld) e traducao (MyMemory API)
+- **`terminal/`** - Parser, formatador, registro de comandos e autocomplete do terminal
+- **`hooks/`** - `use-keydown` (atalhos de teclado), `use-active-section` (Intersection Observer)
 
 ---
 
@@ -126,11 +128,11 @@ LocaleProvider
 
 ### Estrutura de Traducoes
 
-**Tipo:** `src/i18n/types.ts` — define a interface `Translations` com todas as chaves obrigatorias.
+**Tipo:** `src/i18n/types.ts` - define a interface `Translations` com todas as chaves obrigatorias.
 
 **Arquivos de traducao:**
-- `src/i18n/locales/en.ts` — Ingles completo
-- `src/i18n/locales/pt.ts` — Portugues completo
+- `src/i18n/locales/en.ts` - Ingles completo
+- `src/i18n/locales/pt.ts` - Portugues completo
 
 Ambos exportam um objeto `translations: Translations` com cobertura total de:
 - Labels de navegacao e secoes
@@ -198,7 +200,7 @@ O sistema de feedback adota uma abordagem GitOps: cada submissao de feedback ger
 | Cargo | text | Nao | 100 chars |
 | Empresa | text | Nao | 100 chars |
 | Mensagem | textarea | Sim | 10-1000 chars |
-| Website | text (honeypot) | — | Oculto, invisivel |
+| Website | text (honeypot) | - | Oculto, invisivel |
 
 O campo honeypot (`website`) e um input invisivel que funciona como anti-spam. Bots que preenchem todos os campos serao silenciosamente aceitos sem criar nenhum PR.
 
@@ -242,7 +244,7 @@ Utiliza a biblioteca **tinyld** para deteccao estatistica de idioma. A funcao `d
 
 ### API de Traducao
 
-Utiliza a **MyMemory Translation API** — servico gratuito sem necessidade de chave de API.
+Utiliza a **MyMemory Translation API** - servico gratuito sem necessidade de chave de API.
 
 - **Endpoint:** `https://api.mymemory.translated.net/get`
 - **Limite:** 480 caracteres por requisicao (limite real da API: 500 chars)
@@ -289,13 +291,13 @@ O painel possui duas abas:
 - Lista PRs abertos com branch `feedback/*`
 - Para cada feedback exibe: nome, data, cargo/empresa, mensagem original, link para o PR
 - Campos editaveis de traducao (English e Portugues) pre-populados pela traducao automatica
-- Botao "Save translations" — persiste as edicoes no `feedbacks.json` da branch do PR
+- Botao "Save translations" - persiste as edicoes no `feedbacks.json` da branch do PR
 - Botoes de acao: **Approve** (merge + deleta branch) e **Reject** (fecha PR + deleta branch)
 
 **Aba "Approved" (Aprovados)**
 - Lista PRs merged com branch `feedback/*`
 - Exibe estado "Reverted" para feedbacks que foram removidos apos aprovacao
-- Botao **Revert** — remove o feedback do `feedbacks.json` no main (commit direto)
+- Botao **Revert** - remove o feedback do `feedbacks.json` no main (commit direto)
 
 ### Fluxo de Moderacao
 
@@ -387,7 +389,7 @@ Os comandos sao definidos em `src/lib/terminal/commands.ts`. Cada comando implem
 | `clear` | Limpa o terminal |
 | `exit` | Fecha o terminal |
 | `ls` | Exibe arvore de diretorios do portfolio |
-| `whoami` | Retorna "visitor — curious enough to open a terminal" |
+| `whoami` | Retorna "visitor - curious enough to open a terminal" |
 | `history` | Mostra historico de comandos |
 | `sudo` | Exibe box de "contratacao" (easter egg humoristico) |
 | `rm` | "Nice try. This portfolio is immutable." |
@@ -763,4 +765,188 @@ src/
 │   └── feedbacks.json                     Feedbacks aprovados
 └── types/
     └── index.ts                           Definicoes de tipos
+```
+
+> Nota: a arvore acima e um snapshot pre-blog. Arquivos adicionados posteriormente estao listados nas secoes [Blog Bilingue](#blog-bilingue-mdx) e [Blog CMS](#blog-cms-editor-rico--prs).
+
+---
+
+## Blog Bilingue (MDX)
+
+Blog estatico bilingue publicado em `/blog`, com detalhe por post em `/blog/[slug]`. Conteudo autorado como arquivos MDX versionados no proprio repositorio, renderizado em tempo de build via `next-mdx-remote/rsc`.
+
+### Modelo de Conteudo
+
+Cada post tem duas variantes de idioma:
+
+```
+src/content/blog/{slug}/
+  ├── en.mdx
+  └── pt.mdx
+```
+
+Frontmatter (identico entre locales):
+
+```yaml
+---
+slug: nome-do-post
+title: "Titulo do post"
+description: "Resumo de uma linha para cards e og:description"
+date: 2026-07-25
+tags: ["nextjs", "mdx"]
+cover: "/blog/hero.png"   # opcional
+---
+```
+
+### Loader
+
+Arquivo: `src/lib/blog/loader.ts` (sincrono, base `fs`, seguro em RSC).
+
+| Funcao | Retorno |
+|--------|---------|
+| `listPosts()` | `BlogPostMeta[]` ordenado por data desc |
+| `getPostBySlug(slug)` | `BlogPost \| null` (inclui corpo MDX de ambos locales) |
+| `listTags()` | `string[]` desduplicado, ordem asc |
+
+O loader falha rapido no build se:
+- Falta uma variante de locale
+- Frontmatter invalido (chave obrigatoria ausente)
+- Slug do frontmatter difere do nome do diretorio
+
+### Rotas e Renderizacao
+
+| Rota | Tipo | Nota |
+|------|------|------|
+| `/blog` | Static | Index com filtro de tag (querystring `?tag=`), cards no estilo de projetos |
+| `/blog/[slug]` | SSG | `generateStaticParams` pre-gera todos os slugs; renderiza EN e PT no mesmo HTML; wrapper client alterna via `hidden` sem navegacao |
+| `/sitemap.xml` | Static | Inclui todos os posts |
+| `/robots.txt` | Static | Bloqueia `/admin` e `/api` |
+
+### Estilizacao
+
+Classe `.prose-blog` definida em `src/app/globals.css`, escrita a mao usando tokens de tema (`var(--text-primary)`, `var(--accent)`, `var(--bg-tertiary)`, etc.). Sem `@tailwindcss/typography`. Funciona com todos os temas do site.
+
+### SEO
+
+- `generateMetadata` por post: canonical, `og:type=article`, `publishedTime`, tags, cover
+- JSON-LD `BlogPosting` inline no `<head>` do detalhe
+- Sitemap com `lastModified: post.date`, `changeFrequency: monthly`
+
+### Deps
+
+- `next-mdx-remote` - renderizacao RSC de MDX
+- `gray-matter` - parsing de frontmatter
+- `marked` - Markdown -> HTML no CMS (server-side, sem eval)
+
+---
+
+## Blog CMS (Editor Rico + PRs)
+
+Camada de CMS embutida em `/admin` que gerencia posts do blog via fluxo GitOps: toda mutacao abre um Pull Request no GitHub, o admin revisa, mescla, e o Vercel implanta.
+
+### Fluxo de Publicacao
+
+```
+1. Admin abre /admin -> aba Blog
+        |
+        v
+2. Clica "+ New post" (ou Continue editing em PR aberto, ou Edit em post publicado)
+        |
+        v
+3. Preenche frontmatter + escreve corpo no editor TipTap (WYSIWYG)
+   - Insere imagens (max 6, 2 MB, PNG/JPEG/WEBP)
+   - Alterna EN/PT com toggle no topo
+   - Traduz EN -> PT em um clique (preserva formatacao e codigo)
+   - Clica "Preview" para abrir /admin/blog/preview em nova aba
+        |
+        v
+4. Clica "Save & open PR" (ou "Update PR" se ja existe um aberto)
+   Servidor:
+   - Valida frontmatter, corpo Markdown, imagens (mime, magic bytes, tamanho)
+   - Commit atomico: en.mdx + pt.mdx + public/blog/{slug}/*.png
+   - Abre PR em branch blog/{slug}-{ts}
+        |
+        v
+5. Revisa PR no GitHub (Vercel gera URL de preview)
+        |
+        v
+6. Clica "Merge & publish" no admin (ou merge no GitHub)
+        |
+        v
+7. Vercel detecta push em main -> rebuild -> post ao vivo em /blog
+```
+
+### Editor Rico (TipTap)
+
+- Motor: `@tiptap/react` v3 + `starter-kit` (headings, negrito, italico, listas, blockquote, code, code block, link)
+- Extensoes extras: `image` (com atributo customizado `data-pending`), `placeholder`
+- Toolbar: `H2 H3 | B I | * List 1. List " </> <> | Link Image`
+- Carregado via `dynamic({ ssr: false })` para nao pesar o bundle publico
+- Contorna CSP estrito: sem `Function()` ou `eval` no runtime
+
+### Round-trip HTML <-> Markdown
+
+- Editar post existente: `marked.parse(md)` -> HTML -> TipTap `setContent`
+- Salvar: `turndown(html)` -> Markdown -> commit
+- Turndown configurado com `codeBlockStyle: fenced`, `headingStyle: atx`, `bulletListMarker: -`
+- Regra customizada de imagem: `<img data-pending="{fn}">` -> `![alt](/blog/{slug}/{fn})`
+
+### Traducao EN -> PT
+
+Rota `POST /api/admin/blog/translate` recebe `{ title, description, texts: string[] }`, onde `texts` sao apenas os nos de texto extraidos do HTML (via DOMParser client-side). Codigo, headings, imagens e formatacao permanecem intactos porque o servidor so ve o texto puro.
+
+O cliente aplica as traducoes de volta nos mesmos nos DOM. Backend: [MyMemory API](https://mymemory.translated.net) (gratuita).
+
+### Preview Dedicado
+
+Rota `/admin/blog/preview` (client-only) le o rascunho do `sessionStorage`/`localStorage` e renderiza usando o layout exato de `/blog/[slug]`: `<Navbar>`, header do post, `<article class="prose-blog">`, `<Footer>`. Imagens pendentes sao embutidas como data URLs.
+
+Guarda de acesso: presenca de `adminToken` no storage; ausencia redireciona para `/admin`.
+
+### Update-em-vez-de-nova-PR
+
+Ao editar um post que ja tem PR aberto no repo, o botao Save vira "Update PR": o servidor identifica a branch existente, adiciona um novo commit no mesmo branch (via `git.createTree` + `git.createCommit` + `git.updateRef`), e o PR se atualiza sem abrir um novo. Se o post ja esta merged, uma nova edicao abre uma nova PR.
+
+### API Routes Adicionadas
+
+| Metodo | Rota | Descricao |
+|--------|------|-----------|
+| `GET`  | `/api/admin/blog/list` | Posts em main + PRs abertos de blog |
+| `GET`  | `/api/admin/blog/get?slug={s}&ref={ref}` | Fetch `en.mdx` + `pt.mdx` (ref = main ou branch) |
+| `POST` | `/api/admin/blog/save` | Cria/atualiza post, opcional `branchName` para reusar PR |
+| `POST` | `/api/admin/blog/delete` | Abre PR removendo ambos arquivos |
+| `POST` | `/api/admin/blog/merge` | Merge PR + delete branch (rejeita non-blog branches) |
+| `POST` | `/api/admin/blog/translate` | Traduz `{title, description, texts[]}` |
+| `GET`  | `/api/admin/ping` | Auth-only, usado no login (desacopla de GitHub) |
+
+Todas as novas rotas passam por: `requireAdmin` -> `requireSameOrigin` -> rate limit por chave dedicada.
+
+### Seguranca
+
+| Vetor | Mitigacao |
+|-------|-----------|
+| CSRF | Header `Origin` verificado quando presente; ausencia = same-origin |
+| XSS via MDX | `validateBody` rejeita `<script>`, `<iframe>`, `<style>`, event handlers, `javascript:` URLs |
+| XSS via preview | Sanitizer DOMParser server-side + client-side antes de `dangerouslySetInnerHTML` |
+| Imagens hostis | Filename regex + mime whitelist + magic-byte sniff (PNG/JPEG/WEBP), rejeita SVG |
+| PR hijack | Merge endpoint aceita apenas branches `blog/*`; edit-existing-PR verifica slug corresponde |
+| Payload flood | 15 MiB total, 2 MiB por imagem, max 6 imagens, corpo max 40 KB |
+
+### Deps
+
+- `@tiptap/react`, `@tiptap/starter-kit`, `@tiptap/extension-image`, `@tiptap/extension-placeholder`
+- `turndown` (+ `@types/turndown` dev)
+- `marked` (compartilhado com o blog)
+
+### Arquivos Adicionados
+
+```
+src/app/admin/blog/preview/page.tsx
+src/app/api/admin/blog/{list,get,save,delete,merge,translate}/route.ts
+src/app/api/admin/ping/route.ts
+src/components/admin/{admin-shell,feedback-tab,blog-tab,blog-post-list}.tsx
+src/components/admin/{blog-editor,blog-editor-form,blog-tiptap-editor,blog-tiptap-toolbar}.tsx
+src/components/admin/{blog-preview-view,blog-image-manager,blog-md-html}.tsx
+src/lib/admin/sanitize-html.ts
+src/lib/blog/{validate,route-guards,mdx-file,git-tree}.ts
 ```
