@@ -16,7 +16,7 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
   const other = projects.filter((p) => !p.isFeatured)
 
   return (
-    <section id="projects" className="scroll-mt-20 py-30">
+    <section id="projects" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <SectionLabel number="03" label={t.projects.sectionLabel} />
 

@@ -18,7 +18,7 @@ export function Experience() {
   }
 
   return (
-    <section id="experience" className="scroll-mt-20 py-30">
+    <section id="experience" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <SectionLabel number="02" label={t.experience.sectionLabel} />
 

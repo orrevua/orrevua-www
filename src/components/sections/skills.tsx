@@ -18,7 +18,7 @@ export function Skills() {
   const { t } = useTranslation()
 
   return (
-    <section id="skills" className="scroll-mt-20 py-30">
+    <section id="skills" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <SectionLabel number="04" label={t.skills.sectionLabel} />
 

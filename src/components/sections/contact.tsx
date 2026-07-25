@@ -11,7 +11,7 @@ export function Contact() {
   const linkedin = personalInfo.socials.find((s) => s.platform === "linkedin")
 
   return (
-    <section id="contact" className="scroll-mt-20 py-30">
+    <section id="contact" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <div className="flex justify-center">
           <SectionLabel number="06" label={t.contact.sectionLabel} />

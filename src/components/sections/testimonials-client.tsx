@@ -63,7 +63,7 @@ export function TestimonialsClient({ feedbacks }: TestimonialsClientProps) {
   const isCarousel = feedbacks.length > 2
 
   return (
-    <section id="testimonials" className="scroll-mt-20 py-30">
+    <section id="testimonials" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <SectionLabel number="05" label={t.testimonials.sectionLabel} />
 

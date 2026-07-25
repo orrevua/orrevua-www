@@ -17,7 +17,7 @@ export function About() {
   ]
 
   return (
-    <section id="about" className="scroll-mt-20 py-30">
+    <section id="about" className="scroll-mt-20 py-16">
       <div className="mx-auto max-w-5xl px-6">
         <SectionLabel number="01" label={t.about.sectionLabel} />
 

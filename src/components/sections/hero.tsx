@@ -13,7 +13,7 @@ export function Hero() {
 
   return (
     <>
-    <section className="mx-auto max-w-5xl px-6 pt-32 pb-20">
+    <section className="mx-auto max-w-5xl px-6 pt-32 pb-12">
       <div>
         <motion.h1
           className="text-5xl font-bold text-text-primary lg:text-6xl"
