@@ -1,7 +1,5 @@
 "use client"
 
-import { useState } from "react"
-import Image from "next/image"
 import { Terminal } from "lucide-react"
 import { motion } from "framer-motion"
 import { personalInfo } from "@/data/personal"
@@ -10,14 +8,13 @@ import { ClaudeMascot } from "@/components/ui/claude-mascot"
 import { useTranslation } from "@/i18n/context"
 
 export function Hero() {
-  const [imageError, setImageError] = useState(false)
   const { toggle } = useTerminal()
   const { t } = useTranslation()
 
   return (
     <>
-    <section className="mx-auto flex max-h-[80vh] max-w-5xl items-center gap-12 px-6 pt-32 pb-20">
-      <div className="flex-[3]">
+    <section className="mx-auto max-w-5xl px-6 pt-32 pb-20">
+      <div>
         <motion.h1
           className="text-5xl font-bold text-text-primary lg:text-6xl"
           initial={{ opacity: 0, x: -20 }}
@@ -69,23 +66,6 @@ export function Hero() {
         </motion.div>
       </div>
 
-      <div className="hidden flex-2 justify-end lg:flex">
-        {imageError ? (
-          <div className="flex h-96 w-80 items-center justify-center rounded-2xl border border-border bg-bg-secondary">
-            <span className="font-mono text-4xl text-text-tertiary">FF</span>
-          </div>
-        ) : (
-          <Image
-            src="/photo.png"
-            alt={personalInfo.name}
-            width={400}
-            height={500}
-            className="max-h-96 rounded-2xl border border-border object-cover"
-            priority
-            onError={() => setImageError(true)}
-          />
-        )}
-      </div>
     </section>
 
       <ClaudeMascot />
