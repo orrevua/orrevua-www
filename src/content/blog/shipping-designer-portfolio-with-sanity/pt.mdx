@@ -1,0 +1,71 @@
+---
+slug: "shipping-designer-portfolio-with-sanity"
+title: "Deploy do portfólio de uma designer com um CMS headless em algumas noites"
+description: "Como transformei um arquivo Figma em um portfólio bilíngue e editável para um designer de produtos e por que a Sanity conquistou seu lugar ao invés de uma pasta de arquivos MDX."
+date: "2026-07-25"
+tags: ["nextjs", "sanity", "cms", "architecture", "collaboration"]
+---
+
+## Relatório informativo
+
+Minha amiga [Gabi Abinajm](https://www.linkedin.com/in/gabinajm/), uma designer de produto, precisava de um portfólio. As restrições eram a parte interessante: ele tinha que ser capaz de adicionar, reordenar e traduzir estudos de caso sem nunca abrir um editor de código, os vídeos tinham que ser reproduzidos de forma limpa no celular sem arrastar a página para baixo e alguns dos projetos tinham que se estar protegidos por uma senha porque estavam sob NDA.
+
+O construí como um projeto paralelo ao longo de algumas noites. A stack parece normal, Next.js 16, TypeScript, Tailwind, Vercel, mas as decisões interessantes ficam abaixo dessa superfície.
+
+Live: [gabinajm.com.br](http://gabinajm.com.br)  
+Fonte: [https://github.com/orrevua/gabinajm-portfolio](https://github.com/orrevua/gabinajm-portfolio)
+
+## Porquê Sanity, e não uma pasta de arquivos MDX
+
+Meu próprio portfólio envia conteúdo como MDX no repo. Isso funciona porque sou o único autor e gosto de commits. Para um portfólio em que o designer é dono do ciclo de vida do conteúdo, esse modelo quebraria em dois lugares: toda alteração de conteúdo se torna uma pull request e as traduções incham a revisão do diff além do que um não engenheiro queira ver.
+
+Sanity resolveu ambos. O schema vive em `studio/`, o CMS é executado em uma rota dedicada, e Gabi lança projetos da mesma forma que lança ativos no Figma. O site é reconstruído via ISR quando o conteúdo é alterado, portanto, nenhum redeploy manual.
+
+O trade off que aceitei: mais um serviço na stack, além de um limite mensal no nível gratuito da Sanity que este site não atingirá por anos.
+
+_Um CMS não é algo "bom de se ter" no momento que um não engenheiro precisa publicar. É todo o produto._
+
+## Arquitetura limpa numa pequena aplicação Next.js
+
+Para um site de cinco páginas, arquitetura limpa parece um exagero. Eu fiz assim mesmo, e faria de novo:
+
+```
+src/
+├── app/          # Next.js routes, thin — mostly composition
+├── adapters/     # UI components, presentation-only
+├── domain/       # Types and pure business rules
+├── services/     # Sanity client, queries, SendGrid client
+└── i18n/         # Locale provider, EN/PT dictionaries
+```
+
+A recompensa aparece na primeira vez que você troca algo. Quando o nível gratuito do SendGrid ficou mais restrito, a substituição do serviço de e-mail era um único arquivo. Quando a forma de consulta do Sanity mudou, um adaptador absorveu a migração. As rotas não sabiam que nenhum dos serviços existia.
+
+Para um projeto tão pequeno, os limites parecem cerimoniais, mas no momento em que você adiciona um segundo desenvolvedor ou um segundo CMS, a cerimônia se paga.
+
+## Bilíngue sem estrutura
+
+Localidade baseada em cookies, não `/en` ou `/pt` no URL, um canônico por página. As inversões de local são instantâneas porque trocam um contexto, não uma rota. Este é o mesmo padrão que uso no meu próprio site e sobrevive bem a esta escala.
+
+O conteúdo da Sanity é criado em ambos os idiomas dentro de um único documento, com cada campo carregando `{ en: string; pt: string }`. A falta de uma tradução é uma garantia de tempo de compilação na camada type e um fallback suave na renderização.
+
+## Vídeos da maneira responsável
+
+Estudos de caso se baseiam em movimento, screencasts de interações, passo a passo de protótipos, esse tipo de coisa. Servir MP4s brutos mataria a largura de banda móvel. Eu codifiquei para HLS e usei [hls.js](https://github.com/video-dev/hls.js) com um pequeno invólucro de carregamento lento:
+
+```
+const HLSVideo = dynamic(() => import("@/adapters/hls-video"), { ssr: false })
+```
+
+O pacote é enviado apenas para visitantes que realmente rolam para um vídeo. Custo do truque: um componente exclusivo do cliente e uma importação dinâmica. Payoff: um portfólio cheio de vídeos longos com boa pontuação no Core Web Vitals.
+
+## Controle de acesso em estudos de caso privados
+
+Alguns projetos estavam sob NDA. O compromisso: uma senha curta por projeto, verificada no lado do servidor em relação a um valor de hash em Sanity, desbloqueando o estudo de caso para a sessão atual. Sem contas de utilizador, sem base de dados, sem fluxo de inscrição, apenas um formulário e um cookie.
+
+Para um portfólio que vive inteiramente para ser compartilhado com os recrutadores, esta é a altitude certa de segurança. Ele bloqueia o conteúdo sem transformar o site num aplicativo.
+
+## Conclusão
+
+A colaboração é o título incalculável do envio de algo assim. Gabi me entregou um Figma com componentes reais, estados reais, conteúdo real e respondeu a perguntas em minutos. Eu poderia me concentrar nas partes com as quais me importo, arquitetura, desempenho, confiabilidade chata, porque o design não era um alvo em movimento.
+
+A stack importa menos do que a interação entre as pessoas. Escolha ferramentas que permitam que o não-engenheiro continue a enviar depois de sair.
