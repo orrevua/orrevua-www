@@ -1,0 +1,49 @@
+---
+slug: architecting-bilingual-portfolio
+title: "Architecting a bilingual portfolio without an i18n framework"
+description: "How I ship EN/PT content across an entire Next.js site with a typed dictionary, zero routing overhead, and no third-party i18n library."
+date: 2026-07-18
+tags: ["nextjs", "i18n", "architecture", "typescript"]
+---
+
+## The constraint
+
+I wanted a portfolio that a Portuguese-speaking recruiter and an English-speaking engineering manager could both land on and feel at home in. What I did not want was `/en/…` and `/pt/…` route trees, a middleware translating URLs, or a runtime that fetches JSON dictionaries.
+
+The site is small. The audience toggles languages rarely. Optimizing for that reality removes an entire category of framework.
+
+## What I built
+
+A fully typed `Translations` object, indexed by `Locale = "en" | "pt"`, provided through a single React context. A `useTranslation()` hook returns the current dictionary. Switching locales flips the context; nothing navigates, nothing refetches.
+
+```ts
+export type Translations = {
+  nav: { about: string; projects: string /* … */ }
+  hero: { viewMyWork: string }
+  // …
+}
+
+export type Locale = "en" | "pt"
+```
+
+Each locale file exports a `Translations` object. TypeScript refuses to compile if either locale drifts from the shape. That single guarantee is worth more than any lint rule I could bolt on later.
+
+## Trade-offs I accepted
+
+> Every architectural choice is a trade, the question is whether you are trading knowingly.
+
+- **No URL-based locale.** SEO gets a single canonical per page instead of `hreflang` alternates. Fine for a personal site; not fine for a marketplace.
+- **Full dictionary shipped to the client.** ~15 KB gzipped, and it is used on every page. A larger site would need code-splitting per route.
+- **No inflection/pluralization engine.** Portuguese has grammatical gender; I write both variants by hand where needed. When copy grows, this will hurt.
+
+## The MDX escape hatch
+
+Long-form content, like this blog, lives as MDX files under `src/content/blog/{slug}/{en,pt}.mdx`. A synchronous loader reads both variants at build time, validates that frontmatter matches, and hands the compiled trees to a client component that toggles which one is visible based on the current locale.
+
+The rendered HTML doubles for each post. For 200–800 word articles, that costs nothing meaningful. If a post ever grows past a few kilobytes of prose, I will split the render and accept a route-level refresh on locale change.
+
+## What I would do differently at scale
+
+If this were a product with hundreds of pages and dozens of authors, I would reach for `next-intl` or `next-i18next` on day one. Not because the pattern above breaks, it does not, but because coordinating translations across a team needs tooling I would otherwise reinvent.
+
+For one engineer, one audience, and two languages, the typed-context pattern earns its place.

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Terminal } from "lucide-react"
 import { useTranslation } from "@/i18n/context"
 
@@ -13,6 +14,12 @@ export function Footer() {
           {t.footer.copyright}
         </p>
         <div className="flex items-center gap-4">
+          <Link
+            href="/blog"
+            className="text-xs text-text-tertiary transition-colors hover:text-accent"
+          >
+            {t.nav.blog}
+          </Link>
           <span className="text-xs text-text-tertiary">{t.footer.builtWith}</span>
           <span className="flex items-center gap-1 text-xs text-text-tertiary">
             <Terminal size={12} />

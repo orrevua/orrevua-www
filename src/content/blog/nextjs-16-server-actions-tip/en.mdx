@@ -1,0 +1,28 @@
+---
+slug: nextjs-16-server-actions-tip
+title: "A quick Server Actions tip for Next.js 16"
+description: "Return a typed result object from Server Actions to keep client error handling boring, in a good way."
+date: 2026-07-10
+tags: ["nextjs", "react", "server-actions"]
+---
+
+## The pattern
+
+Server Actions can throw, but throwing across the network boundary makes clients play defense. A saner default: return a discriminated result.
+
+```ts
+type ActionResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: string }
+
+export async function saveDraft(input: FormData): Promise<ActionResult<{ id: string }>> {
+  const title = String(input.get("title") ?? "").trim()
+  if (!title) return { ok: false, error: "Title is required." }
+  const draft = await db.drafts.insert({ title })
+  return { ok: true, data: { id: draft.id } }
+}
+```
+
+## Why it matters
+
+The client narrows on `result.ok` and never has to distinguish thrown errors from validation failures. Real exceptions still bubble to the framework's error boundary, where they belong.

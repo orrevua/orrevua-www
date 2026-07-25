@@ -1,0 +1,28 @@
+---
+slug: nextjs-16-server-actions-tip
+title: "Uma dica rápida de Server Actions no Next.js 16"
+description: "Retorne um objeto de resultado tipado das Server Actions para deixar o tratamento de erros no cliente entediante, no bom sentido."
+date: 2026-07-10
+tags: ["nextjs", "react", "server-actions"]
+---
+
+## O padrão
+
+Server Actions podem lançar exceções, mas lançar através da fronteira de rede força o cliente a jogar na defesa. Um default mais são: retornar um resultado discriminado.
+
+```ts
+type ActionResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: string }
+
+export async function saveDraft(input: FormData): Promise<ActionResult<{ id: string }>> {
+  const title = String(input.get("title") ?? "").trim()
+  if (!title) return { ok: false, error: "Título é obrigatório." }
+  const draft = await db.drafts.insert({ title })
+  return { ok: true, data: { id: draft.id } }
+}
+```
+
+## Por que importa
+
+O cliente estreita o tipo em `result.ok` e nunca precisa distinguir exceções de falhas de validação. Erros reais continuam subindo até o error boundary do framework, onde eles pertencem.

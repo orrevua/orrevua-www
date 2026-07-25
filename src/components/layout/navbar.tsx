@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { useActiveSection } from "@/lib/hooks/use-active-section"
 import { useTranslation } from "@/i18n/context"
@@ -22,6 +24,8 @@ const SECTION_IDS: string[] = [...NAV_IDS]
 
 export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
+  const isHome = pathname === "/"
   const activeSection = useActiveSection(SECTION_IDS)
   const { t } = useTranslation()
 
@@ -34,11 +38,14 @@ export function Navbar() {
     contact: t.nav.contact,
   }
 
+  const anchorHref = (id: string) => `${isHome ? "" : "/"}#${id}`
+  const isBlogActive = pathname?.startsWith("/blog") ?? false
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-bg-primary/80 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
         <a
-          href="#"
+          href={isHome ? "#" : "/"}
           className="font-mono font-semibold text-text-primary"
           onClick={() => setMobileOpen(false)}
         >
@@ -50,9 +57,9 @@ export function Navbar() {
             {NAV_IDS.map((id) => (
               <li key={id}>
                 <a
-                  href={`#${id}`}
+                  href={anchorHref(id)}
                   className={`font-mono text-sm transition-colors ${
-                    activeSection === id
+                    isHome && activeSection === id
                       ? "text-accent"
                       : "text-text-secondary hover:text-text-primary"
                   }`}
@@ -61,6 +68,18 @@ export function Navbar() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link
+                href="/blog"
+                className={`font-mono text-sm transition-colors ${
+                  isBlogActive
+                    ? "text-accent"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+              >
+                {t.nav.blog}
+              </Link>
+            </li>
           </ul>
 
           <ThemeModeToggle />
@@ -82,9 +101,9 @@ export function Navbar() {
             {NAV_IDS.map((id) => (
               <li key={id}>
                 <a
-                  href={`#${id}`}
+                  href={anchorHref(id)}
                   className={`font-mono text-sm transition-colors ${
-                    activeSection === id
+                    isHome && activeSection === id
                       ? "text-accent"
                       : "text-text-secondary hover:text-text-primary"
                   }`}
@@ -94,6 +113,19 @@ export function Navbar() {
                 </a>
               </li>
             ))}
+            <li>
+              <Link
+                href="/blog"
+                className={`font-mono text-sm transition-colors ${
+                  isBlogActive
+                    ? "text-accent"
+                    : "text-text-secondary hover:text-text-primary"
+                }`}
+                onClick={() => setMobileOpen(false)}
+              >
+                {t.nav.blog}
+              </Link>
+            </li>
           </ul>
         </div>
       )}

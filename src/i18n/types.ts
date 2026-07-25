@@ -8,6 +8,19 @@ export type Translations = {
     skills: string
     testimonials: string
     contact: string
+    blog: string
+  }
+  blog: {
+    sectionLabel: string
+    indexTitle: string
+    indexSubtitle: string
+    emptyState: string
+    filterAll: string
+    filterByTag: string
+    readingTime: string
+    publishedOn: string
+    backToBlog: string
+    notAvailableInLocale: string
   }
   hero: {
     viewMyWork: string

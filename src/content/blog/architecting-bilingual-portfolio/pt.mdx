@@ -1,0 +1,49 @@
+---
+slug: architecting-bilingual-portfolio
+title: "Arquitetando um portfólio bilíngue sem framework de i18n"
+description: "Como entrego conteúdo EN/PT em um site Next.js inteiro com um dicionário tipado, zero overhead de roteamento e nenhuma biblioteca de i18n de terceiros."
+date: 2026-07-18
+tags: ["nextjs", "i18n", "architecture", "typescript"]
+---
+
+## A restrição
+
+Eu queria um portfólio no qual uma recrutadora que fala português e um gerente de engenharia que fala inglês pudessem cair e se sentir em casa. O que eu não queria eram árvores de rotas `/en/…` e `/pt/…`, um middleware traduzindo URLs, ou um runtime buscando dicionários JSON.
+
+O site é pequeno. A audiência troca de idioma raramente. Otimizar para essa realidade elimina uma categoria inteira de framework.
+
+## O que eu construí
+
+Um objeto `Translations` totalmente tipado, indexado por `Locale = "en" | "pt"`, disponibilizado através de um único contexto React. Um hook `useTranslation()` retorna o dicionário atual. Trocar de locale muda o contexto; nada navega, nada é refeito.
+
+```ts
+export type Translations = {
+  nav: { about: string; projects: string /* … */ }
+  hero: { viewMyWork: string }
+  // …
+}
+
+export type Locale = "en" | "pt"
+```
+
+Cada arquivo de locale exporta um objeto `Translations`. O TypeScript se recusa a compilar se algum dos dois desviar do formato. Essa única garantia vale mais do que qualquer regra de lint que eu pudesse adicionar depois.
+
+## Trade-offs que aceitei
+
+> Toda escolha arquitetural é uma troca, a pergunta é se você está trocando de forma consciente.
+
+- **Sem locale na URL.** SEO ganha um canonical único por página em vez de alternates com `hreflang`. Ok para um site pessoal; não ok para um marketplace.
+- **Dicionário inteiro entregue ao cliente.** ~15 KB gzipped, e é usado em toda página. Um site maior precisaria de code-splitting por rota.
+- **Sem motor de flexão/pluralização.** Português tem gênero gramatical; eu escrevo as duas variantes na mão onde necessário. Quando o texto crescer, isso vai doer.
+
+## A rota de fuga com MDX
+
+Conteúdo longo, como este blog, vive como arquivos MDX em `src/content/blog/{slug}/{en,pt}.mdx`. Um loader síncrono lê as duas variantes em tempo de build, valida que o frontmatter combina, e entrega as árvores compiladas para um componente cliente que alterna qual delas está visível de acordo com o locale atual.
+
+O HTML renderizado dobra para cada post. Para artigos de 200 a 800 palavras, isso não custa nada relevante. Se algum post crescer além de alguns kilobytes de prosa, eu vou dividir a renderização e aceitar um refresh de rota na troca de idioma.
+
+## O que eu faria diferente em escala
+
+Se isso fosse um produto com centenas de páginas e dezenas de autores, eu iria de `next-intl` ou `next-i18next` no primeiro dia. Não porque o padrão acima quebre, ele não quebra, mas porque coordenar traduções entre um time exige ferramentas que eu acabaria reinventando.
+
+Para um engenheiro, uma audiência, e dois idiomas, o padrão de contexto tipado se paga.
