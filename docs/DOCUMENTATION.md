@@ -1,4 +1,4 @@
-﻿# Documentacao Tecnica - orrevua.dev
+# Documentacao Tecnica - orrevua.dev
 
 **Repositorio:** [orrevua/orrevua-www](https://github.com/orrevua/orrevua-www)
 **URL de Producao:** https://orrevua.dev
