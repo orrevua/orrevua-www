@@ -72,8 +72,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error"
     console.error("Error updating translation:", message)
+    const details = process.env.NODE_ENV !== "production" ? message : undefined
     return NextResponse.json(
-      { error: "Failed to update translation." },
+      { error: "Failed to update translation.", details },
       { status: 500 }
     )
   }

@@ -100,8 +100,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(feedbackPRs, { status: 200 })
   } catch (error) {
     console.error("Error listing moderation PRs:", error)
+    const details =
+      process.env.NODE_ENV !== "production" && error instanceof Error
+        ? error.message
+        : undefined
     return NextResponse.json(
-      { error: "Failed to fetch pending feedbacks." },
+      { error: "Failed to fetch pending feedbacks.", details },
       { status: 500 }
     )
   }

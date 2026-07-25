@@ -70,6 +70,34 @@ function detectLanguage(text: string): "en" | "pt" {
   return lang === "pt" ? "pt" : "en"
 }
 
+export async function translateBlock(
+  text: string,
+  from: string,
+  to: string
+): Promise<string> {
+  if (!text) return text
+  try {
+    return await translateText(text, from, to)
+  } catch {
+    return text
+  }
+}
+
+export async function translateMdx(
+  source: string,
+  from: string,
+  to: string
+): Promise<string> {
+  if (!source) return source
+  const parts = source.split(/(```[\s\S]*?```)/g)
+  const translated = await Promise.all(
+    parts.map((part) =>
+      part.startsWith("```") ? Promise.resolve(part) : translateBlock(part, from, to)
+    )
+  )
+  return translated.join("")
+}
+
 export async function translateFeedback(
   message: string
 ): Promise<TranslationResult> {

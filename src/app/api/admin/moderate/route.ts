@@ -120,8 +120,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid action." }, { status: 400 })
   } catch (error) {
     console.error("Error processing moderation:", error)
+    const details =
+      process.env.NODE_ENV !== "production" && error instanceof Error
+        ? error.message
+        : undefined
     return NextResponse.json(
-      { error: "Error executing moderation via GitHub API." },
+      { error: "Error executing moderation via GitHub API.", details },
       { status: 500 }
     )
   }

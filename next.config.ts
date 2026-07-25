@@ -1,9 +1,19 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV !== "production";
+
+const scriptSrc = [
+  "'self'",
+  "'unsafe-inline'",
+  ...(isDev ? ["'unsafe-eval'"] : []),
+  "https://va.vercel-scripts.com",
+  "https://vercel.live",
+].join(" ");
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   "img-src 'self' data: https:",
-  "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://vercel.live",
+  `script-src ${scriptSrc}`,
   "style-src 'self' 'unsafe-inline'",
   "connect-src 'self' https://vitals.vercel-analytics.com https://vercel.live",
   "frame-src https://maps.google.com https://www.google.com",
