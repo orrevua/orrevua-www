@@ -43,6 +43,8 @@ export const translations: Translations = {
   projects: {
     sectionLabel: "projetos",
     viewAllOnGithub: "Ver todos no GitHub →",
+    showStudyProjects: "Mostrar projetos de estudo",
+    hideStudyProjects: "Ocultar projetos de estudo",
   },
   skills: {
     sectionLabel: "habilidades",

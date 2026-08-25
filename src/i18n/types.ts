@@ -43,6 +43,8 @@ export type Translations = {
   projects: {
     sectionLabel: string
     viewAllOnGithub: string
+    showStudyProjects: string
+    hideStudyProjects: string
   }
   skills: {
     sectionLabel: string

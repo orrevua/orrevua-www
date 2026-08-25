@@ -1,6 +1,7 @@
 "use client"
 
-import { ExternalLink } from "lucide-react"
+import { ChevronDown, ExternalLink } from "lucide-react"
+import { useState } from "react"
 import { GitHubIcon } from "@/components/ui/icons"
 import { PreviewCarousel } from "@/components/ui/preview-carousel"
 import { projects } from "@/data/projects"
@@ -11,6 +12,7 @@ import type { OgPreviews } from "@/lib/og"
 
 export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
   const { t } = useTranslation()
+  const [showStudy, setShowStudy] = useState(false)
 
   const featured = projects.filter((p) => p.isFeatured)
   const other = projects.filter((p) => !p.isFeatured)
@@ -95,7 +97,21 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
         </div>
 
         {other.length > 0 && (
-          <div className="mt-8 space-y-3">
+          <>
+            <button
+              type="button"
+              onClick={() => setShowStudy((prev) => !prev)}
+              aria-expanded={showStudy}
+              className="mt-8 flex items-center gap-2 font-mono text-sm text-text-secondary transition-colors hover:text-accent"
+            >
+              <ChevronDown
+                size={16}
+                className={`transition-transform ${showStudy ? "rotate-180" : ""}`}
+              />
+              {showStudy ? t.projects.hideStudyProjects : t.projects.showStudyProjects}
+            </button>
+            {showStudy && (
+          <div className="mt-4 space-y-3">
             {other.map((project) => {
               const translated = t.data.projects[project.id]
               return (
@@ -155,6 +171,8 @@ export function Projects({ ogPreviews }: { ogPreviews: OgPreviews }) {
               )
             })}
           </div>
+            )}
+          </>
         )}
 
         <a
