@@ -375,6 +375,13 @@ export const translations: Translations = {
         longDescription:
           "A professional portfolio website for a product designer, featuring bilingual support (EN/PT), Sanity CMS integration for easy content updates, responsive design, contact form via SendGrid, and performance monitoring. Built with Next.js 16 App Router and deployed on Vercel.",
       },
+      ragkit: {
+        displayName: "ragkit — Local-First Hybrid RAG",
+        description:
+          "Local-first hybrid-RAG toolkit — dense + lexical retrieval over SQLite and Ollama, with a CLI, an MCP server, and a built-in retrieval eval harness. 100% offline.",
+        longDescription:
+          "A local-first hybrid-RAG system that indexes notes, specs, and code into SQLite (sqlite-vec + FTS5) with Ollama embeddings, then blends vector and lexical search with Reciprocal Rank Fusion. Ships a CLI, an MCP stdio server for agents, an explainable query mode, and a source-anchored eval harness that scores retrieval quality (Hit Rate, MRR, nDCG, precision/recall) — deterministic and CI-ready.",
+      },
       heic2format: {
         displayName: "HEIC Image Converter",
         description:
