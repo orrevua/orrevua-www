@@ -27,6 +27,7 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/orrevua/gabinajm-portfolio",
     liveUrl: "https://www.gabinajm.com.br",
     isFeatured: true,
+    badge: "production",
   },
   {
     id: "heic2format",
