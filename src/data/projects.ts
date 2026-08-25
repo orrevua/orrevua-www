@@ -30,6 +30,19 @@ export const projects: Project[] = [
     badge: "production",
   },
   {
+    id: "ragkit",
+    name: "simple-local-ragkit",
+    displayName: "ragkit — Local-First Hybrid RAG",
+    description:
+      "Local-first hybrid-RAG toolkit — dense + lexical retrieval over SQLite and Ollama, with a CLI, an MCP server, and a built-in retrieval eval harness. 100% offline.",
+    longDescription:
+      "A local-first hybrid-RAG system that indexes notes, specs, and code into SQLite (sqlite-vec + FTS5) with Ollama embeddings, then blends vector and lexical search with Reciprocal Rank Fusion. Ships a CLI, an MCP stdio server for agents, an explainable query mode, and a source-anchored eval harness that scores retrieval quality (Hit Rate, MRR, nDCG, precision/recall) — deterministic and CI-ready.",
+    technologies: ["TypeScript", "Node.js", "SQLite", "sqlite-vec", "FTS5", "Ollama", "MCP", "Vitest"],
+    githubUrl: "https://github.com/orrevua/simple-local-ragkit",
+    liveUrl: "https://simple-local-ragkit.vercel.app/",
+    isFeatured: true,
+  },
+  {
     id: "heic2format",
     name: "heic2format-frontend",
     displayName: "HEIC Image Converter",
